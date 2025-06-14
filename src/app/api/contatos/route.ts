@@ -161,8 +161,8 @@ export async function GET(request: NextRequest) {
       query(countSql, params.slice(0, -2))
     ])
     
-    const contatos = contatosResult.rows
-    const total = parseInt(countResult.rows[0].total)
+    const contatos = contatosResult
+    const total = parseInt(countResult[0].total)
     const totalPages = Math.ceil(total / limit)
     
     return NextResponse.json({

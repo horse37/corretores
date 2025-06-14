@@ -8,7 +8,7 @@ import path from 'path'
 // GET - Buscar corretor por ID
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const authResult = await requireAuth(request)
@@ -16,7 +16,8 @@ export async function GET(
       return NextResponse.json({ error: 'Não autorizado' }, { status: 401 })
     }
 
-    const corretorId = parseInt(params.id)
+    const paramsResolved = await params
+    const corretorId = parseInt(paramsResolved.id)
     if (isNaN(corretorId)) {
       return NextResponse.json({ error: 'ID inválido' }, { status: 400 })
     }
@@ -63,7 +64,7 @@ export async function GET(
 // PUT - Atualizar corretor
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const authResult = await requireAuth(request)
@@ -71,7 +72,8 @@ export async function PUT(
       return NextResponse.json({ error: 'Não autorizado' }, { status: 401 })
     }
 
-    const corretorId = parseInt(params.id)
+    const paramsResolved = await params
+    const corretorId = parseInt(paramsResolved.id)
     if (isNaN(corretorId)) {
       return NextResponse.json({ error: 'ID inválido' }, { status: 400 })
     }
@@ -206,7 +208,7 @@ export async function PUT(
 // DELETE - Excluir corretor
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const authResult = await requireAuth(request)
@@ -219,12 +221,13 @@ export async function DELETE(
       return NextResponse.json({ error: 'Acesso negado' }, { status: 403 })
     }
 
+    const paramsResolved = await params
+    const corretorId = parseInt(paramsResolved.id)
+
     // Impedir que o corretor exclua o próprio cadastro
     if (authResult.userId === corretorId) {
       return NextResponse.json({ error: 'Você não pode excluir o seu próprio cadastro' }, { status: 403 })
     }
-
-    const corretorId = parseInt(params.id)
     if (isNaN(corretorId)) {
       return NextResponse.json({ error: 'ID inválido' }, { status: 400 })
     }

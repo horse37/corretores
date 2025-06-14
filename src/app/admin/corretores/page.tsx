@@ -70,7 +70,7 @@ export default function Corretores() {
       const corretoresData = Array.isArray(data.corretores) ? data.corretores : (data.corretores?.rows || [])
       
       // Processar os dados dos corretores para converter Buffer em string
-      const processedCorretores = corretoresData.map(corretor => {
+      const processedCorretores = corretoresData.map((corretor: any) => {
         if (corretor.foto && typeof corretor.foto === 'object' && corretor.foto.type === 'Buffer') {
           // Converter Buffer para string
           let fotoPath = Buffer.from(corretor.foto.data).toString('utf8')
@@ -92,7 +92,7 @@ export default function Corretores() {
       // Se não for admin, mostrar apenas o próprio cadastro
       let filteredCorretores = processedCorretores
       if (currentUserRole !== 'admin' && currentUserId) {
-        filteredCorretores = processedCorretores.filter(corretor => corretor.id === currentUserId)
+        filteredCorretores = processedCorretores.filter((corretor: any) => corretor.id === currentUserId)
       }
       
       setCorretores(filteredCorretores)

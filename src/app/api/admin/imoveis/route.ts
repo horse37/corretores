@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { query } from '@/lib/database'
+import { query } from '@/lib/db'
 import { requireAuth } from '@/lib/auth'
 import { writeFile, mkdir } from 'fs/promises'
 import path from 'path'
@@ -89,11 +89,11 @@ export async function GET(request: NextRequest) {
       query(countQuery, countParams)
     ])
 
-    const total = parseInt(countResult.rows[0].total)
+    const total = parseInt(countResult[0].total)
     const totalPages = Math.ceil(total / limit)
 
     return NextResponse.json({
-      imoveis: imoveisResult.rows,
+      imoveis: imoveisResult,
       pagination: {
         page,
         limit,
@@ -140,7 +140,7 @@ export async function POST(request: NextRequest) {
         area_construida: formData.get('area_construida') ? parseFloat(formData.get('area_construida') as string) : null,
         quartos: formData.get('quartos') ? parseInt(formData.get('quartos') as string) : null,
         banheiros: formData.get('banheiros') ? parseInt(formData.get('banheiros') as string) : null,
-        vagas: formData.get('vagas') ? parseInt(formData.get('vagas') as string) : null,
+        vagas_garagem: formData.get('vagas_garagem') ? parseInt(formData.get('vagas_garagem') as string) : null,
         endereco: formData.get('endereco') as string,
         bairro: formData.get('bairro') as string,
         cidade: formData.get('cidade') as string,
@@ -167,7 +167,7 @@ export async function POST(request: NextRequest) {
       area_construida,
       quartos,
       banheiros,
-      vagas,
+      vagas_garagem,
       endereco,
       bairro,
       cidade,
@@ -215,14 +215,14 @@ export async function POST(request: NextRequest) {
       ) RETURNING *`,
       [
         titulo, descricao, tipo, finalidade, preco, area_total, area_construida,
-        quartos, banheiros, vagas, endereco, bairro, cidade, estado, cep,
+        quartos, banheiros, vagas_garagem, endereco, bairro, cidade, estado, cep,
         JSON.stringify(caracteristicas), JSON.stringify(fotosUrls), JSON.stringify(videosUrls), latitude, longitude, authResult.userId, 'disponivel'
       ]
     )
 
     return NextResponse.json({
       message: 'Imóvel cadastrado com sucesso',
-      imovel: result.rows[0],
+      imovel: result[0],
     }, { status: 201 })
   } catch (error) {
     console.error('Erro ao cadastrar imóvel:', error)

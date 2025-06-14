@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { query } from '@/lib/database'
+import { query } from '@/lib/db'
 import { Imovel, TipoImovel, StatusImovel } from '@/types'
 
 export async function GET(request: NextRequest) {
@@ -221,8 +221,8 @@ export async function GET(request: NextRequest) {
       query(countSql, countParams)
     ])
     
-    const imoveis = imoveisResult.rows
-    const total = parseInt(countResult.rows[0].total)
+    const imoveis = imoveisResult
+    const total = parseInt(countResult[0].total)
     const totalPages = Math.ceil(total / limit)
     
     return NextResponse.json({
@@ -316,7 +316,7 @@ export async function POST(request: NextRequest) {
     ]
     
     const result = await query(sql, params)
-    const imovel = result.rows[0]
+    const imovel = result[0]
     
     return NextResponse.json({
       success: true,

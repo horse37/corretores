@@ -120,38 +120,38 @@ export async function GET(request: NextRequest) {
     // Montar resposta
     const stats = {
       imoveis: {
-        total: parseInt(imoveisStats.rows[0].total),
-        ativos: parseInt(imoveisStats.rows[0].ativos),
-        vendidos: parseInt(imoveisStats.rows[0].vendidos),
-        inativos: parseInt(imoveisStats.rows[0].inativos)
+        total: parseInt(imoveisStats[0].total),
+        ativos: parseInt(imoveisStats[0].ativos),
+        vendidos: parseInt(imoveisStats[0].vendidos),
+        inativos: parseInt(imoveisStats[0].inativos)
       },
       corretores: {
-        total: parseInt(corretoresStats.rows[0].total),
-        ativos: parseInt(corretoresStats.rows[0].ativos),
-        inativos: parseInt(corretoresStats.rows[0].inativos)
+        total: parseInt(corretoresStats[0].total),
+        ativos: parseInt(corretoresStats[0].ativos),
+        inativos: parseInt(corretoresStats[0].inativos)
       },
       contatos: {
-        total: parseInt(contatosStats.rows[0].total),
-        novos: parseInt(contatosStats.rows[0].novos),
-        em_andamento: parseInt(contatosStats.rows[0].em_andamento),
-        respondidos: parseInt(contatosStats.rows[0].respondidos),
-        finalizados: parseInt(contatosStats.rows[0].finalizados)
+        total: parseInt(contatosStats[0].total),
+        novos: parseInt(contatosStats[0].novos),
+        em_andamento: parseInt(contatosStats[0].em_andamento),
+        respondidos: parseInt(contatosStats[0].respondidos),
+        finalizados: parseInt(contatosStats[0].finalizados)
       },
       vendas: {
-        mes_atual: parseInt(vendasStats.rows[0].mes_atual),
-        mes_anterior: parseInt(vendasStats.rows[0].mes_anterior),
-        total_ano: parseInt(vendasStats.rows[0].total_ano)
+        mes_atual: parseInt(vendasStats[0].mes_atual),
+        mes_anterior: parseInt(vendasStats[0].mes_anterior),
+        total_ano: parseInt(vendasStats[0].total_ano)
       }
     }
 
     return NextResponse.json({
       stats,
-      topImoveis: topImoveis.rows.map(imovel => ({
+      topImoveis: topImoveis.map(imovel => ({
         ...imovel,
         visualizacoes: parseInt(imovel.visualizacoes),
         contatos: parseInt(imovel.contatos)
       })),
-      recentActivities: recentActivities.rows
+      recentActivities: recentActivities
     })
   } catch (error) {
     console.error('Erro ao buscar dados do dashboard:', error)

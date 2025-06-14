@@ -17,6 +17,12 @@ interface Toast {
 interface ToastContextType {
   addToast: (toast: Omit<Toast, 'id'>) => void
   removeToast: (id: string) => void
+  toast: {
+    success: (title: string, description?: string) => void
+    error: (title: string, description?: string) => void
+    info: (title: string, description?: string) => void
+    warning: (title: string, description?: string) => void
+  }
 }
 
 const ToastContext = createContext<ToastContextType | undefined>(undefined)
@@ -48,8 +54,23 @@ export const ToastProvider = ({ children }: { children: ReactNode }) => {
     setToasts(prev => prev.filter(toast => toast.id !== id))
   }
 
+  const toast = {
+    success: (title: string, description?: string) => {
+      addToast({ type: 'success', title, description })
+    },
+    error: (title: string, description?: string) => {
+      addToast({ type: 'error', title, description })
+    },
+    info: (title: string, description?: string) => {
+      addToast({ type: 'info', title, description })
+    },
+    warning: (title: string, description?: string) => {
+      addToast({ type: 'warning', title, description })
+    }
+  }
+
   return (
-    <ToastContext.Provider value={{ addToast, removeToast }}>
+    <ToastContext.Provider value={{ addToast, removeToast, toast }}>
       {children}
       <ToastContainer toasts={toasts} onRemove={removeToast} />
     </ToastContext.Provider>
@@ -143,10 +164,9 @@ export const Toaster = () => {
   return null // O ToastProvider já renderiza os toasts
 }
 
-// Hook para facilitar o uso
-export const toast = {
+// Hook para facilitar o uso fora do contexto
+export const createToast = {
   success: (title: string, description?: string) => {
-    // Este será implementado quando o ToastProvider estiver disponível
     console.log('Success toast:', title, description)
   },
   error: (title: string, description?: string) => {

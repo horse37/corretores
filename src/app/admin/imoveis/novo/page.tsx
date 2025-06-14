@@ -20,7 +20,7 @@ interface ImovelForm {
   area_construida: string
   quartos: string
   banheiros: string
-  vagas: string
+  vagas_garagem: string
   endereco: string
   bairro: string
   cidade: string
@@ -67,7 +67,7 @@ export default function NovoImovel() {
     area_construida: '',
     quartos: '',
     banheiros: '',
-    vagas: '',
+    vagas_garagem: '',
     endereco: '',
     bairro: '',
     cidade: '',
@@ -341,12 +341,12 @@ export default function NovoImovel() {
               </div>
               
               <div>
-                <Label htmlFor="vagas">Vagas de Garagem</Label>
+                <Label htmlFor="vagas_garagem">Vagas de Garagem</Label>
                 <Input
-                  id="vagas"
+                  id="vagas_garagem"
                   type="number"
-                  value={formData.vagas}
-                  onChange={(e) => handleInputChange('vagas', e.target.value)}
+                  value={formData.vagas_garagem}
+                  onChange={(e) => handleInputChange('vagas_garagem', e.target.value)}
                   placeholder="2"
                   className="w-32"
                 />

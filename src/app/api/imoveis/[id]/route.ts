@@ -2,9 +2,9 @@ import { NextRequest, NextResponse } from 'next/server'
 import { query } from '@/lib/db'
 
 interface RouteParams {
-  params: {
+  params: Promise<{
     id: string
-  }
+  }>
 }
 
 export async function GET(
@@ -141,7 +141,7 @@ export async function PUT(
     const checkSql = 'SELECT id FROM imoveis WHERE id = $1 AND ativo = true'
     const checkResult = await query(checkSql, [id])
     
-    if (checkResult.rows.length === 0) {
+    if (checkResult.length === 0) {
       return NextResponse.json(
         { 
           success: false, 
@@ -173,7 +173,7 @@ export async function PUT(
       RETURNING *
     `
     
-    const params = [
+    const queryParams = [
       titulo,
       descricao,
       tipo,
@@ -192,8 +192,8 @@ export async function PUT(
       id
     ]
     
-    const result = await query(sql, params)
-    const imovel = result.rows[0]
+    const result = await query(sql, queryParams)
+    const imovel = result[0]
     
     return NextResponse.json({
       success: true,
@@ -217,7 +217,7 @@ export async function DELETE(
   { params }: RouteParams
 ) {
   try {
-    const { id } = params
+    const { id } = await params
     
     if (!id || id.trim() === '') {
       return NextResponse.json(
@@ -240,7 +240,7 @@ export async function DELETE(
     
     const result = await query(sql, [id])
     
-    if (result.rows.length === 0) {
+    if (result.length === 0) {
       return NextResponse.json(
         { 
           success: false, 

@@ -1,4 +1,4 @@
-import { Pool } from 'pg'
+import { Pool, QueryResult } from 'pg'
 
 if (!process.env.DATABASE_URL) {
   throw new Error('DATABASE_URL environment variable is not set')
@@ -10,7 +10,7 @@ const pool = new Pool({
   max: 20, // máximo de conexões no pool
   idleTimeoutMillis: 30000, // tempo limite para conexões inativas
   connectionTimeoutMillis: 15000, // tempo limite para estabelecer conexão (aumentado para evitar timeouts)
-  ssl: false, // desabilita SSL para desenvolvimento local
+  ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false, // SSL apenas em produção
   allowExitOnIdle: true, // permite que o processo termine quando não há conexões ativas
 })
 
@@ -41,7 +41,7 @@ export async function query(text: string, params?: any[]) {
     }
     
     return result
-  } catch (error) {
+  } catch (error: any) {
     console.error('Database connection error:', {
       error: error.message,
       code: error.code,
@@ -78,7 +78,7 @@ export async function transaction(callback: (client: any) => Promise<any>) {
     const result = await callback(client)
     await client.query('COMMIT')
     return result
-  } catch (error) {
+  } catch (error: any) {
     await client.query('ROLLBACK')
     console.error('Transaction error:', error)
     throw error
@@ -94,7 +94,7 @@ export async function checkConnection() {
   try {
     const result = await query('SELECT NOW()')
     return { success: true, timestamp: result.rows[0].now }
-  } catch (error) {
+  } catch (error: any) {
     return { success: false, error: error.message }
   }
 }

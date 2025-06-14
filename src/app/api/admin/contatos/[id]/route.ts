@@ -5,7 +5,7 @@ import { requireAuth } from '@/lib/auth'
 // GET - Buscar contato por ID
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     // Verificar autenticação
@@ -14,7 +14,8 @@ export async function GET(
       return NextResponse.json({ error: authResult.error }, { status: 401 })
     }
 
-    const contatoId = params.id
+    const paramsResolved = await params
+    const contatoId = paramsResolved.id
     
     // Validar formato UUID
     const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i
@@ -61,7 +62,7 @@ export async function GET(
 // PUT - Atualizar contato
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     // Verificar autenticação
@@ -70,7 +71,8 @@ export async function PUT(
       return NextResponse.json({ error: authResult.error }, { status: 401 })
     }
 
-    const contatoId = params.id
+    const paramsResolved = await params
+    const contatoId = paramsResolved.id
     
     // Validar formato UUID
     const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i
@@ -149,7 +151,7 @@ export async function PUT(
 // DELETE - Excluir contato
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     // Verificar autenticação
@@ -158,7 +160,8 @@ export async function DELETE(
       return NextResponse.json({ error: authResult.error }, { status: 401 })
     }
 
-    const contatoId = params.id
+    const paramsResolved = await params
+    const contatoId = paramsResolved.id
     
     // Validar formato UUID
     const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i

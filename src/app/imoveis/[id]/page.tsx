@@ -21,7 +21,7 @@ interface Property {
   area: number;
   quartos: number;
   banheiros: number;
-  vagas: number;
+  vagas_garagem: number;
   endereco: string;
   cidade: string;
   estado: string;
@@ -46,7 +46,8 @@ export default function PropertyDetailPage() {
     nome: '',
     email: '',
     telefone: '',
-    mensagem: ''
+    mensagem: '',
+    tipo: 'contato'
   });
   const [submittingContact, setSubmittingContact] = useState(false);
 
@@ -77,7 +78,7 @@ export default function PropertyDetailPage() {
       
       if (data.success) {
         toast.success(data.message || 'Mensagem enviada com sucesso!');
-        setContactForm({ nome: '', email: '', telefone: '', mensagem: '' });
+        setContactForm({ nome: '', email: '', telefone: '', mensagem: '', tipo: 'contato' });
         setShowContactForm(false);
       } else {
         toast.error(data.error || 'Erro ao enviar mensagem');
@@ -308,7 +309,7 @@ export default function PropertyDetailPage() {
                   <div className="flex items-center">
                     <Car className="w-5 h-5 text-gray-400 mr-2" />
                     <span className="text-sm text-gray-600">
-                      {property.vagas} {property.vagas === 1 ? 'vaga' : 'vagas'}
+                      {property.vagas_garagem} {property.vagas_garagem === 1 ? 'vaga' : 'vagas'}
                     </span>
                   </div>
                   <div className="flex items-center">

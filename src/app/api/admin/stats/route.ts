@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { query } from '@/lib/database'
+import { query } from '@/lib/db'
 import { requireAuth } from '@/lib/auth'
 
 export async function GET(request: NextRequest) {
@@ -22,10 +22,10 @@ export async function GET(request: NextRequest) {
     ])
 
     const stats = {
-      totalImoveis: parseInt(imoveisResult.rows[0].total),
-      imoveisDisponiveis: parseInt(imoveisDisponiveisResult.rows[0].total),
-      totalCorretores: parseInt(corretoresResult.rows[0].total),
-      mensagensPendentes: parseInt(mensagensResult.rows[0].total),
+      totalImoveis: parseInt(imoveisResult[0].total),
+      imoveisDisponiveis: parseInt(imoveisDisponiveisResult[0].total),
+      totalCorretores: parseInt(corretoresResult[0].total),
+      mensagensPendentes: parseInt(mensagensResult[0].total),
     }
 
     return NextResponse.json(stats)

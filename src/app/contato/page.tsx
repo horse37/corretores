@@ -3,11 +3,10 @@
 import { useState } from 'react'
 import { motion } from 'framer-motion'
 import { MapPin, Phone, Mail, Clock, MessageCircle } from 'lucide-react'
-import { useToast } from '@/components/ui/toaster'
+import toast from 'react-hot-toast'
 import LoadingSpinner from '@/components/ui/LoadingSpinner'
 
 const ContatoPage = () => {
-  const { toast } = useToast()
   const [formData, setFormData] = useState({
     nome: '',
     email: '',

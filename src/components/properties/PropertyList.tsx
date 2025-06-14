@@ -162,15 +162,8 @@ const PropertyList = () => {
         {properties.data.map((property, index) => {
           // Obter primeira foto disponível
           let mainImage = '/placeholder-property.svg'
-          if (property.fotos) {
-            try {
-              const fotos = typeof property.fotos === 'string' ? JSON.parse(property.fotos) : property.fotos
-              if (Array.isArray(fotos) && fotos.length > 0) {
-                mainImage = fotos[0]
-              }
-            } catch (e) {
-              console.error('Erro ao parsear fotos:', e)
-            }
+          if (property.fotos && property.fotos.length > 0) {
+            mainImage = property.fotos[0]
           }
           
           const isFavorite = favorites.includes(property.id)

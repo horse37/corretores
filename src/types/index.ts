@@ -38,6 +38,8 @@ export interface Imovel {
   corretor_telefone?: string
   corretor_whatsapp?: string
   caracteristicas?: string[]
+  fotos?: string[] // URLs das fotos do imóvel
+  videos?: string[] // URLs dos vídeos do imóvel
   midias?: ImovelMidia[]
   created_at: Date
   updated_at: Date

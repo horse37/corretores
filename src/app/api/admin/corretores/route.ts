@@ -124,12 +124,12 @@ export async function POST(request: NextRequest) {
     const result = await query(
       `INSERT INTO corretores 
        (nome, email, senha, creci, telefone, foto, role, ativo) 
-       VALUES ($1, $2, $3, $4, $5, $6, $7, $8)`,
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING id`,
       [nome, email, hashedPassword, creci, telefone, foto, role, ativo]
     )
 
     const novoCorretor = {
-      id: result.insertId,
+      id: result[0].id,
       nome,
       email,
       creci,

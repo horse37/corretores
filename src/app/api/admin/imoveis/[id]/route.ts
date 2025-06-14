@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { query } from '@/lib/database'
+import { query } from '@/lib/db'
 import { requireAuth } from '@/lib/auth'
 import { unlink, writeFile, mkdir } from 'fs/promises'
 import path from 'path'
@@ -27,7 +27,7 @@ async function saveFile(file: File, folder: string): Promise<string> {
 // GET - Buscar imóvel por ID
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const authResult = await requireAuth(request)
@@ -38,7 +38,8 @@ export async function GET(
       )
     }
 
-    const imovelId = params.id
+    const paramsResolved = await params
+    const imovelId = paramsResolved.id
     if (!imovelId) {
       return NextResponse.json(
         { message: 'ID inválido' },
@@ -51,14 +52,14 @@ export async function GET(
       [imovelId]
     )
 
-    if (result.rows.length === 0) {
+    if (result.length === 0) {
       return NextResponse.json(
         { message: 'Imóvel não encontrado' },
         { status: 404 }
       )
     }
 
-    const imovel = result.rows[0]
+    const imovel = result[0]
     
     // Parse JSON fields
     try {
@@ -93,7 +94,7 @@ export async function GET(
 // PUT - Atualizar imóvel
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const authResult = await requireAuth(request)
@@ -104,7 +105,8 @@ export async function PUT(
       )
     }
 
-    const imovelId = params.id
+    const paramsResolved = await params
+    const imovelId = paramsResolved.id
     if (!imovelId) {
       return NextResponse.json(
         { message: 'ID inválido' },
@@ -118,7 +120,7 @@ export async function PUT(
       [imovelId]
     )
 
-    if (existingResult.rows.length === 0) {
+    if (existingResult.length === 0) {
       return NextResponse.json(
         { message: 'Imóvel não encontrado' },
         { status: 404 }
@@ -261,7 +263,7 @@ export async function PUT(
       ]
     )
 
-    if (result.rows.length === 0) {
+    if (result.length === 0) {
       return NextResponse.json(
         { message: 'Imóvel não encontrado ou você não tem permissão para editá-lo' },
         { status: 404 }
@@ -270,7 +272,7 @@ export async function PUT(
 
     return NextResponse.json({
       message: 'Imóvel atualizado com sucesso',
-      imovel: result.rows[0],
+      imovel: result[0],
     })
   } catch (error) {
     console.error('Erro ao atualizar imóvel:', error)
@@ -284,7 +286,7 @@ export async function PUT(
 // DELETE - Excluir imóvel
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const authResult = await requireAuth(request)
@@ -295,7 +297,8 @@ export async function DELETE(
       )
     }
 
-    const imovelId = params.id
+    const paramsResolved = await params
+    const imovelId = paramsResolved.id
     if (!imovelId) {
       return NextResponse.json(
         { message: 'ID inválido' },
@@ -309,14 +312,14 @@ export async function DELETE(
       [imovelId, authResult.userId]
     )
 
-    if (imovelResult.rows.length === 0) {
+    if (imovelResult.length === 0) {
       return NextResponse.json(
         { message: 'Imóvel não encontrado ou você não tem permissão para excluí-lo' },
         { status: 404 }
       )
     }
 
-    const imovel = imovelResult.rows[0]
+    const imovel = imovelResult[0]
     
     // Excluir fotos do sistema de arquivos
     if (imovel.fotos) {
