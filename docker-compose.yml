@@ -10,8 +10,10 @@ services:
       - "4000:4000"
     environment:
       - NODE_ENV=production
-      - DATABASE_URL=${DATABASE_URL}
-      - JWT_SECRET=${JWT_SECRET}
+      # Usando a string de conexão para o banco de dados externo
+      - DATABASE_URL=postgresql://postgres:masterkey@50.114.32.196:5432/imobiliaria_db?schema=public
+      # Definindo um valor padrão para JWT_SECRET
+      - JWT_SECRET=chave_jwt_secreta_para_desenvolvimento_local_12345
       - UPLOAD_DIR=./public/uploads
       - PORT=4000
       - HOSTNAME=0.0.0.0
