@@ -1,0 +1,50 @@
+version: '3.8'
+
+services:
+  # Aplicação Next.js
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "4000:4000"
+    environment:
+      - NODE_ENV=production
+      - DATABASE_URL=postgresql://postgres:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB}
+      - JWT_SECRET=${JWT_SECRET}
+      - UPLOAD_DIR=./public/uploads
+    depends_on:
+      - db
+    volumes:
+      - uploads:/app/public/uploads
+    restart: unless-stopped
+    networks:
+      - app-network
+
+  # Banco de dados PostgreSQL
+  db:
+    image: postgres:15-alpine
+    environment:
+      - POSTGRES_DB=${POSTGRES_DB:-imobiliaria}
+      - POSTGRES_USER=${POSTGRES_USER:-postgres}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./setup-database.js:/docker-entrypoint-initdb.d/setup-database.js:ro
+    ports:
+      - "5432:5432"
+    restart: unless-stopped
+    networks:
+      - app-network
+
+# Volumes para persistência de dados
+volumes:
+  postgres_data:
+    driver: local
+  uploads:
+    driver: local
+
+# Rede para comunicação entre serviços
+networks:
+  app-network:
+    driver: bridge
