@@ -19,6 +19,7 @@ COPY . .
 
 # Definir variáveis de ambiente para build
 ENV NEXT_TELEMETRY_DISABLED 1
+ENV NODE_ENV=development
 
 # Build da aplicação
 RUN npm run build
