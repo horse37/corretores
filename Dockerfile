@@ -1,5 +1,6 @@
-# Dockerfile para projeto Next.js com PostgreSQL
+tentei fazer o # Dockerfile para projeto Next.js
 # Multi-stage build para otimizar o tamanho da imagem
+# Configurado para banco de dados externo
 
 # Stage 1: Dependencies
 FROM node:18-alpine AS deps
