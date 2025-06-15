@@ -40,6 +40,10 @@ RUN cp jsconfig.json ./node_modules/@/
 # Desativar telemetria
 ENV NEXT_TELEMETRY_DISABLED=1
 
+# Adicionar variável de ambiente temporária para o build
+# Esta variável será substituída pela real durante a execução
+ENV DATABASE_URL=postgresql://postgres:postgres@localhost:5432/imobiliaria_temp
+
 # Build com ambiente de produção (padrão do Next.js)
 # Adicionando --no-lint para evitar problemas durante o build
 RUN npm run build -- --no-lint
