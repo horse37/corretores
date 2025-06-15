@@ -58,8 +58,9 @@ RUN cp -r ./src/app/* ./.next/standalone/src/app/
 RUN cp -r ./src/types/* ./.next/server/src/types/
 RUN cp -r ./src/types/* ./.next/standalone/src/types/
 
-# Copiar jsconfig.json para o diretório standalone
+# Copiar jsconfig.json e next.config.js para o diretório standalone
 RUN cp jsconfig.json ./.next/standalone/
+RUN cp next.config.js ./.next/standalone/
 
 # Copiar node_modules/@ para o diretório standalone
 RUN mkdir -p ./.next/standalone/node_modules/@
