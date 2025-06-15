@@ -14,57 +14,54 @@ RUN npm ci --include=dev
 # Stage 2: Builder
 FROM node:18-alpine AS builder
 WORKDIR /app
+
+# Copiar dependências do estágio anterior
 COPY --from=deps /app/node_modules ./node_modules
 
-# Copiar arquivos essenciais para build
-COPY tsconfig.json .         # ⬅️ Necessário para resolver aliases como @/components
+# Copiar todo o projeto (inclui tsconfig.json, src/, public/ etc.)
 COPY . .
 
 # Desativar telemetria
-ENV NEXT_TELEMETRY_DISABLED 1
+ENV NEXT_TELEMETRY_DISABLED=1
 
-# Build da aplicação com ambiente de desenvolvimento
+# Build com ambiente de desenvolvimento (se necessário, use NODE_ENV=production aqui)
 RUN NODE_ENV=development npm run build
 
-# Stage 3: Runner
+# Stage 3: Runner (Imagem final e enxuta)
 FROM node:18-alpine AS runner
 WORKDIR /app
 
-# Definir variáveis de ambiente para produção
-ENV NODE_ENV production
-ENV NEXT_TELEMETRY_DISABLED 1
+# Variáveis de ambiente
+ENV NODE_ENV=production
+ENV NEXT_TELEMETRY_DISABLED=1
+ENV PORT=3000
+ENV HOSTNAME=0.0.0.0
 
-# Criar usuário não-root para segurança
+# Criar usuário não-root para produção
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs
 
-# Copiar arquivos públicos (como imagens e uploads)
+# Copiar arquivos públicos e build
 COPY --from=builder /app/public ./public
 
-# Criar diretórios de upload e aplicar permissões
+# Criar pastas para uploads e aplicar permissões
 RUN mkdir -p ./public/uploads/imoveis ./public/uploads/corretores
 RUN chown -R nextjs:nodejs ./public/uploads
 
-# Copiar arquivos de build do Next.js
+# Copiar build standalone do Next.js
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 
-# Garantir que os componentes e código fonte estejam disponíveis
+# Copiar código fonte e arquivos de configuração necessários
 COPY --from=builder --chown=nextjs:nodejs /app/src ./src
-
-# Copiar arquivos de configuração
-COPY --from=builder /app/next.config.js ./
 COPY --from=builder /app/package.json ./
+COPY --from=builder /app/next.config.js ./
 
-# Alternar para usuário não-root
+# Trocar para o usuário seguro
 USER nextjs
 
-# Expor porta usada pela aplicação
+# Expor porta da aplicação
 EXPOSE 3000
 
-# Definir variáveis de ambiente padrão
-ENV PORT 3000
-ENV HOSTNAME "0.0.0.0"
-
-# Comando para iniciar a aplicação
+# Comando para iniciar o servidor
 CMD ["node", "server.js"]
