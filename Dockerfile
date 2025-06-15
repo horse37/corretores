@@ -34,6 +34,9 @@ RUN cp -r ./src/types/* ./node_modules/@/types/
 # Criar jsconfig.json para ajudar na resolução de caminhos durante o build
 RUN echo '{"compilerOptions":{"baseUrl":".","paths":{"@/*":["./src/*"]}}}' > jsconfig.json
 
+# Criar next.config.js para garantir que esteja disponível
+RUN echo '/** @type {import(\'next\').NextConfig} */\nconst path = require(\'path\');\n\nconst nextConfig = {\n  output: \'standalone\',\n  distDir: \'.next\',\n  transpilePackages: [\'@\'],\n  experimental: {\n    serverComponentsExternalPackages: [\'@\'],\n    esmExternals: \'loose\',\n  },\n  images: {\n    domains: [\'localhost\'],\n    unoptimized: true,\n    remotePatterns: [\n      {\n        protocol: \'https\',\n        hostname: \'**\',\n      },\n      {\n        protocol: \'http\',\n        hostname: \'**\',\n      },\n    ],\n  },\n  async rewrites() {\n    return [\n      {\n        source: \'/uploads/:path*\',\n        destination: \'/uploads/:path*\',\n      },\n    ];\n  },\n};\n\nmodule.exports = nextConfig;' > next.config.js
+
 # Copiar jsconfig.json para node_modules/@ para garantir resolução de caminhos
 RUN cp jsconfig.json ./node_modules/@/
 
