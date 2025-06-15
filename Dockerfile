@@ -41,10 +41,12 @@ RUN echo "/** @type {import('next').NextConfig} */" > next.config.js && \
     echo "const nextConfig = {" >> next.config.js && \
     echo "  output: 'standalone'," >> next.config.js && \
     echo "  distDir: '.next'," >> next.config.js && \
-    echo "  transpilePackages: ['@']," >> next.config.js && \
+    echo "  // Removido transpilePackages para evitar conflito com serverExternalPackages" >> next.config.js && \
+    echo "  // transpilePackages: ['@']," >> next.config.js && \
+    echo "  serverExternalPackages: []," >> next.config.js && \
     echo "  experimental: {" >> next.config.js && \
-    echo "    serverComponentsExternalPackages: ['@']," >> next.config.js && \
-    echo "    esmExternals: 'loose'," >> next.config.js && \
+    echo "    // Removido serverComponentsExternalPackages que foi movido para serverExternalPackages" >> next.config.js && \
+    echo "    // Removido esmExternals que não é mais recomendado" >> next.config.js && \
     echo "  }," >> next.config.js && \
     echo "  images: {" >> next.config.js && \
     echo "    domains: ['localhost']," >> next.config.js && \
@@ -67,6 +69,11 @@ RUN echo "/** @type {import('next').NextConfig} */" > next.config.js && \
     echo "        destination: '/uploads/:path*'," >> next.config.js && \
     echo "      }," >> next.config.js && \
     echo "    ];" >> next.config.js && \
+    echo "  }," >> next.config.js && \
+    echo "  // Adicionando webpack config para garantir que @ seja resolvido corretamente" >> next.config.js && \
+    echo "  webpack: (config) => {" >> next.config.js && \
+    echo "    config.resolve.alias['@'] = path.resolve(__dirname, 'src');" >> next.config.js && \
+    echo "    return config;" >> next.config.js && \
     echo "  }," >> next.config.js && \
     echo "};" >> next.config.js && \
     echo "" >> next.config.js && \
