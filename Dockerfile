@@ -24,7 +24,7 @@ COPY . .
 # Desativar telemetria
 ENV NEXT_TELEMETRY_DISABLED=1
 
-# Build com ambiente de desenvolvimento (se necessário, use NODE_ENV=production aqui)
+# Build com ambiente de desenvolvimento para garantir que todos os módulos sejam incluídos
 RUN NODE_ENV=development npm run build
 
 # Stage 3: Runner (Imagem final e enxuta)
@@ -48,14 +48,17 @@ COPY --from=builder /app/public ./public
 RUN mkdir -p ./public/uploads/imoveis ./public/uploads/corretores
 RUN chown -R nextjs:nodejs ./public/uploads
 
+# Copiar código fonte primeiro para garantir que esteja disponível
+COPY --from=builder --chown=nextjs:nodejs /app/src ./src
+
 # Copiar build standalone do Next.js
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 
-# Copiar código fonte e arquivos de configuração necessários
-COPY --from=builder --chown=nextjs:nodejs /app/src ./src
+# Copiar arquivos de configuração necessários
 COPY --from=builder /app/package.json ./
 COPY --from=builder /app/next.config.js ./
+COPY --from=builder /app/tsconfig.json ./
 
 # Trocar para o usuário seguro
 USER nextjs
