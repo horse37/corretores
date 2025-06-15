@@ -15,12 +15,15 @@ RUN npm ci --include=dev
 FROM node:18-alpine AS builder
 WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
+
+# Copiar arquivos essenciais para build
+COPY tsconfig.json .         # ⬅️ Necessário para resolver aliases como @/components
 COPY . .
 
-# Definir variáveis de ambiente para build
+# Desativar telemetria
 ENV NEXT_TELEMETRY_DISABLED 1
 
-# Build da aplicação
+# Build da aplicação com ambiente de desenvolvimento
 RUN NODE_ENV=development npm run build
 
 # Stage 3: Runner
@@ -31,35 +34,35 @@ WORKDIR /app
 ENV NODE_ENV production
 ENV NEXT_TELEMETRY_DISABLED 1
 
-# Criar usuário não-root para produção
+# Criar usuário não-root para segurança
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs
 
-# Copiar arquivos necessários do builder
+# Copiar arquivos públicos (como imagens e uploads)
 COPY --from=builder /app/public ./public
 
-# Criar diretório de uploads com permissões corretas
+# Criar diretórios de upload e aplicar permissões
 RUN mkdir -p ./public/uploads/imoveis ./public/uploads/corretores
 RUN chown -R nextjs:nodejs ./public/uploads
 
-# Copiar arquivos de build
+# Copiar arquivos de build do Next.js
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 
-# Garantir que os componentes estejam disponíveis
-COPY --from=builder --chown=nextjs:nodejs /app/src/components ./src/components
+# Garantir que os componentes e código fonte estejam disponíveis
+COPY --from=builder --chown=nextjs:nodejs /app/src ./src
 
-# Copiar arquivos de configuração necessários
+# Copiar arquivos de configuração
 COPY --from=builder /app/next.config.js ./
 COPY --from=builder /app/package.json ./
 
-# Mudar para usuário não-root
+# Alternar para usuário não-root
 USER nextjs
 
-# Expor porta 3000
+# Expor porta usada pela aplicação
 EXPOSE 3000
 
-# Definir variável de ambiente para porta
+# Definir variáveis de ambiente padrão
 ENV PORT 3000
 ENV HOSTNAME "0.0.0.0"
 
