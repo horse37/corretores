@@ -7,6 +7,8 @@ import { motion } from 'framer-motion'
 const Hero = () => {
   const [searchTerm, setSearchTerm] = useState('')
   const [selectedCity, setSelectedCity] = useState('')
+  const [cidades, setCidades] = useState<string[]>([])
+  const [loadingCidades, setLoadingCidades] = useState(false)
   const [stats, setStats] = useState({
     imoveis: 0,
     cidades: 0,
@@ -18,11 +20,26 @@ const Hero = () => {
     // Redirecionar para página de resultados com filtros
     const params = new URLSearchParams()
     if (searchTerm) params.set('busca', searchTerm)
-    if (selectedCity) params.set('cidade', selectedCity)
+    if (selectedCity) params.set('cidades', selectedCity)
     window.location.href = `/imoveis?${params.toString()}`
   }
 
   useEffect(() => {
+    const fetchCidades = async () => {
+      setLoadingCidades(true)
+      try {
+        const response = await fetch('/api/cidades')
+        const data = await response.json()
+        if (data.success) {
+          setCidades(data.cidades)
+        }
+      } catch (error) {
+        console.error('Erro ao carregar cidades:', error)
+      } finally {
+        setLoadingCidades(false)
+      }
+    }
+
     const fetchStats = async () => {
       try {
         const response = await fetch('/api/stats')
@@ -34,6 +51,8 @@ const Hero = () => {
         console.error('Erro ao carregar estatísticas:', error)
       }
     }
+    
+    fetchCidades()
     fetchStats()
   }, [])
 
@@ -101,13 +120,16 @@ const Hero = () => {
                     value={selectedCity}
                     onChange={(e) => setSelectedCity(e.target.value)}
                     className="w-full pl-12 pr-4 py-4 text-gray-900 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all duration-200 appearance-none"
+                    disabled={loadingCidades}
                   >
                     <option value="">Todas as cidades</option>
-                    <option value="São Paulo">São Paulo</option>
-                    <option value="Rio de Janeiro">Rio de Janeiro</option>
-                    <option value="Belo Horizonte">Belo Horizonte</option>
-                    <option value="Brasília">Brasília</option>
-                    <option value="Salvador">Salvador</option>
+                    {loadingCidades ? (
+                      <option disabled>Carregando cidades...</option>
+                    ) : (
+                      cidades.map((cidade) => (
+                        <option key={cidade} value={cidade}>{cidade}</option>
+                      ))
+                    )}
                   </select>
                 </div>
               </div>

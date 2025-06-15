@@ -174,7 +174,7 @@ const PropertyList = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.3, delay: index * 0.1 }}
-              className="card group hover:shadow-lg transition-all duration-300"
+              className="card group hover:shadow-lg transition-all duration-300 h-full flex flex-col"
             >
               {/* Imagem */}
               <div className="relative aspect-[4/3] overflow-hidden">
@@ -219,61 +219,64 @@ const PropertyList = () => {
               </div>
               
               {/* Conteúdo */}
-              <div className="p-4">
+              <div className="p-4 flex-1 flex flex-col">
                 {/* Preço */}
                 <div className="text-2xl font-bold text-primary-600 mb-2">
                   {formatPrice(property.preco)}
                 </div>
                 
                 {/* Título */}
-                <h3 className="text-lg font-semibold text-gray-900 mb-2 line-clamp-2">
+                <h3 className="text-lg font-semibold text-gray-900 mb-2 line-clamp-2 h-14 flex items-start">
                   {property.titulo}
                 </h3>
                 
-                {/* Localização */}
-                <div className="flex items-center text-gray-600 mb-3">
-                  <MapPin className="w-4 h-4 mr-1 flex-shrink-0" />
-                  <span className="text-sm truncate">
-                    {property.cidade}, {property.estado}
-                  </span>
-                </div>
-                
-                {/* Características */}
-                <div className="flex items-center justify-between text-sm text-gray-600">
-                  <div className="flex items-center space-x-4">
-                    {property.quartos && (
+                {/* Conteúdo principal que cresce */}
+                <div className="flex-grow">
+                  {/* Localização */}
+                  <div className="flex items-center text-gray-600 mb-3">
+                    <MapPin className="w-4 h-4 mr-1 flex-shrink-0" />
+                    <span className="text-sm truncate">
+                      {property.cidade}, {property.estado}
+                    </span>
+                  </div>
+                  
+                  {/* Características */}
+                  <div className="flex items-center justify-between text-sm text-gray-600">
+                    <div className="flex items-center space-x-4">
+                      {property.quartos && (
+                        <div className="flex items-center space-x-1">
+                          <Bed className="w-4 h-4" />
+                          <span>{property.quartos}</span>
+                        </div>
+                      )}
+                      {property.banheiros && (
+                        <div className="flex items-center space-x-1">
+                          <Bath className="w-4 h-4" />
+                          <span>{property.banheiros}</span>
+                        </div>
+                      )}
+                      {property.vagas_garagem !== null && property.vagas_garagem !== undefined && (
+                        <div className="flex items-center space-x-1">
+                          <Car className="w-4 h-4" />
+                          <span>{property.vagas_garagem}</span>
+                        </div>
+                      )}
+                    </div>
+                    
+                    {property.area_total && (
                       <div className="flex items-center space-x-1">
-                        <Bed className="w-4 h-4" />
-                        <span>{property.quartos}</span>
-                      </div>
-                    )}
-                    {property.banheiros && (
-                      <div className="flex items-center space-x-1">
-                        <Bath className="w-4 h-4" />
-                        <span>{property.banheiros}</span>
-                      </div>
-                    )}
-                    {property.vagas_garagem !== null && property.vagas_garagem !== undefined && (
-                      <div className="flex items-center space-x-1">
-                        <Car className="w-4 h-4" />
-                        <span>{property.vagas_garagem}</span>
+                        <Square className="w-4 h-4" />
+                        <span>{formatArea(property.area_total)}</span>
                       </div>
                     )}
                   </div>
                   
-                  {property.area_total && (
-                    <div className="flex items-center space-x-1">
-                      <Square className="w-4 h-4" />
-                      <span>{formatArea(property.area_total)}</span>
-                    </div>
-                  )}
-                </div>
-                
-                {/* Tipo */}
-                <div className="mt-3 pt-3 border-t border-gray-100">
-                  <span className="text-xs font-medium text-gray-500 uppercase tracking-wide">
-                    {property.tipo}
-                  </span>
+                  {/* Tipo */}
+                  <div className="mt-3 pt-3 border-t border-gray-100">
+                    <span className="text-xs font-medium text-gray-500 uppercase tracking-wide">
+                      {property.tipo}
+                    </span>
+                  </div>
                 </div>
               
                 {/* Botão de ação */}

@@ -34,10 +34,28 @@ const PropertyFilters = () => {
   const banheirosOptions = [1, 2, 3, 4, 5]
   const vagasOptions = [0, 1, 2, 3, 4, 5]
 
-  const cidades = [
-    'São Paulo', 'Rio de Janeiro', 'Belo Horizonte', 'Brasília', 'Salvador',
-    'Fortaleza', 'Curitiba', 'Recife', 'Porto Alegre', 'Goiânia'
-  ]
+  const [cidades, setCidades] = useState<string[]>([])
+  const [loadingCidades, setLoadingCidades] = useState(false)
+
+  // Carregar cidades disponíveis
+  useEffect(() => {
+    const fetchCidades = async () => {
+      setLoadingCidades(true)
+      try {
+        const response = await fetch('/api/cidades')
+        const data = await response.json()
+        if (data.success) {
+          setCidades(data.cidades)
+        }
+      } catch (error) {
+        console.error('Erro ao carregar cidades:', error)
+      } finally {
+        setLoadingCidades(false)
+      }
+    }
+
+    fetchCidades()
+  }, [])
 
   // Carregar filtros da URL
   useEffect(() => {
@@ -305,12 +323,24 @@ const PropertyFilters = () => {
                     setFilters({ ...filters, cidade: selectedCidades })
                   }}
                   className="input h-32"
+                  disabled={loadingCidades}
                 >
-                  {cidades.map((cidade) => (
-                    <option key={cidade} value={cidade}>{cidade}</option>
-                  ))}
+                  {loadingCidades ? (
+                    <option disabled>Carregando cidades...</option>
+                  ) : cidades.length > 0 ? (
+                    cidades.map((cidade) => (
+                      <option key={cidade} value={cidade}>{cidade}</option>
+                    ))
+                  ) : (
+                    <option disabled>Nenhuma cidade com imóveis disponíveis</option>
+                  )}
                 </select>
-                <p className="text-xs text-gray-500 mt-1">Segure Ctrl para selecionar múltiplas cidades</p>
+                <p className="text-xs text-gray-500 mt-1">
+                  {loadingCidades 
+                    ? 'Carregando cidades disponíveis...' 
+                    : 'Segure Ctrl para selecionar múltiplas cidades'
+                  }
+                </p>
               </div>
             </div>
 

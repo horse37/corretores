@@ -2,7 +2,9 @@
 node_modules/
 .next/
 database/
-public/
+# public/ - comentado para permitir uploads
+# Excluir apenas arquivos específicos do public se necessário
+# public/*.log
 dist/
 build/
 *.log
