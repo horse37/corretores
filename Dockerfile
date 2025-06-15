@@ -9,7 +9,7 @@ WORKDIR /app
 
 # Copiar arquivos de dependências
 COPY package.json package-lock.json* ./
-RUN npm ci --only=production
+RUN npm ci
 
 # Stage 2: Builder
 FROM node:18-alpine AS builder
@@ -19,7 +19,6 @@ COPY . .
 
 # Definir variáveis de ambiente para build
 ENV NEXT_TELEMETRY_DISABLED 1
-ENV NODE_ENV production
 
 # Build da aplicação
 RUN npm run build
