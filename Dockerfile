@@ -35,7 +35,42 @@ RUN cp -r ./src/types/* ./node_modules/@/types/
 RUN echo '{"compilerOptions":{"baseUrl":".","paths":{"@/*":["./src/*"]}}}' > jsconfig.json
 
 # Criar next.config.js para garantir que esteja disponível
-RUN echo '/** @type {import(\'next\').NextConfig} */\nconst path = require(\'path\');\n\nconst nextConfig = {\n  output: \'standalone\',\n  distDir: \'.next\',\n  transpilePackages: [\'@\'],\n  experimental: {\n    serverComponentsExternalPackages: [\'@\'],\n    esmExternals: \'loose\',\n  },\n  images: {\n    domains: [\'localhost\'],\n    unoptimized: true,\n    remotePatterns: [\n      {\n        protocol: \'https\',\n        hostname: \'**\',\n      },\n      {\n        protocol: \'http\',\n        hostname: \'**\',\n      },\n    ],\n  },\n  async rewrites() {\n    return [\n      {\n        source: \'/uploads/:path*\',\n        destination: \'/uploads/:path*\',\n      },\n    ];\n  },\n};\n\nmodule.exports = nextConfig;' > next.config.js
+RUN echo "/** @type {import('next').NextConfig} */" > next.config.js && \
+    echo "const path = require('path');" >> next.config.js && \
+    echo "" >> next.config.js && \
+    echo "const nextConfig = {" >> next.config.js && \
+    echo "  output: 'standalone'," >> next.config.js && \
+    echo "  distDir: '.next'," >> next.config.js && \
+    echo "  transpilePackages: ['@']," >> next.config.js && \
+    echo "  experimental: {" >> next.config.js && \
+    echo "    serverComponentsExternalPackages: ['@']," >> next.config.js && \
+    echo "    esmExternals: 'loose'," >> next.config.js && \
+    echo "  }," >> next.config.js && \
+    echo "  images: {" >> next.config.js && \
+    echo "    domains: ['localhost']," >> next.config.js && \
+    echo "    unoptimized: true," >> next.config.js && \
+    echo "    remotePatterns: [" >> next.config.js && \
+    echo "      {" >> next.config.js && \
+    echo "        protocol: 'https'," >> next.config.js && \
+    echo "        hostname: '**'," >> next.config.js && \
+    echo "      }," >> next.config.js && \
+    echo "      {" >> next.config.js && \
+    echo "        protocol: 'http'," >> next.config.js && \
+    echo "        hostname: '**'," >> next.config.js && \
+    echo "      }," >> next.config.js && \
+    echo "    ]," >> next.config.js && \
+    echo "  }," >> next.config.js && \
+    echo "  async rewrites() {" >> next.config.js && \
+    echo "    return [" >> next.config.js && \
+    echo "      {" >> next.config.js && \
+    echo "        source: '/uploads/:path*'," >> next.config.js && \
+    echo "        destination: '/uploads/:path*'," >> next.config.js && \
+    echo "      }," >> next.config.js && \
+    echo "    ];" >> next.config.js && \
+    echo "  }," >> next.config.js && \
+    echo "};" >> next.config.js && \
+    echo "" >> next.config.js && \
+    echo "module.exports = nextConfig;" >> next.config.js
 
 # Copiar jsconfig.json para node_modules/@ para garantir resolução de caminhos
 RUN cp jsconfig.json ./node_modules/@/
