@@ -5,6 +5,8 @@ import { useRouter } from 'next/navigation'
 import { Building, Users, MessageSquare, TrendingUp, Plus, Eye, Edit } from 'lucide-react'
 import AdminLayout from '@/components/admin/AdminLayout'
 
+
+
 interface DashboardStats {
   totalImoveis: number
   imoveisDisponiveis: number
