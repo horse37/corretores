@@ -22,13 +22,14 @@ COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 
 # Preparar o diretório node_modules/@
-RUN mkdir -p ./node_modules/@/components ./node_modules/@/lib ./node_modules/@/app
+RUN mkdir -p ./node_modules/@/components ./node_modules/@/lib ./node_modules/@/app ./node_modules/@/types
 
 # Copiar diretamente os componentes para node_modules/@
 # Isso permite que importações como '@/components/...' funcionem corretamente durante o build
 RUN cp -r ./src/components/* ./node_modules/@/components/
 RUN cp -r ./src/lib/* ./node_modules/@/lib/
 RUN cp -r ./src/app/* ./node_modules/@/app/
+RUN cp -r ./src/types/* ./node_modules/@/types/
 
 # Criar jsconfig.json para ajudar na resolução de caminhos durante o build
 RUN echo '{"compilerOptions":{"baseUrl":".","paths":{"@/*":["./src/*"]}}}' > jsconfig.json
@@ -44,12 +45,14 @@ ENV NEXT_TELEMETRY_DISABLED=1
 RUN npm run build -- --no-lint
 
 # Garantir que os componentes estejam disponíveis nos diretórios .next/server e .next/standalone
-RUN mkdir -p ./.next/server/app/components ./.next/server/src/components ./.next/standalone/src/components ./.next/standalone/src/lib ./.next/standalone/src/app
+RUN mkdir -p ./.next/server/app/components ./.next/server/src/components ./.next/standalone/src/components ./.next/standalone/src/lib ./.next/standalone/src/app ./.next/server/src/types ./.next/standalone/src/types
 RUN cp -r ./src/components/* ./.next/server/app/components/
 RUN cp -r ./src/components/* ./.next/server/src/components/
 RUN cp -r ./src/components/* ./.next/standalone/src/components/
 RUN cp -r ./src/lib/* ./.next/standalone/src/lib/
 RUN cp -r ./src/app/* ./.next/standalone/src/app/
+RUN cp -r ./src/types/* ./.next/server/src/types/
+RUN cp -r ./src/types/* ./.next/standalone/src/types/
 
 # Copiar jsconfig.json para o diretório standalone
 RUN cp jsconfig.json ./.next/standalone/
@@ -89,13 +92,14 @@ COPY --from=builder --chown=nextjs:nodejs /app/src ./src
 
 # Configurar estrutura de diretórios para garantir que os componentes sejam encontrados durante a execução
 # Criar diretórios para o alias '@' dentro de node_modules
-RUN mkdir -p /app/node_modules/@/components /app/node_modules/@/lib /app/node_modules/@/app
+RUN mkdir -p /app/node_modules/@/components /app/node_modules/@/lib /app/node_modules/@/app /app/node_modules/@/types
 
 # Copiar diretamente os componentes e outros diretórios importantes para node_modules/@
 # Isso permite que importações como '@/components/...' funcionem corretamente
 COPY --from=builder --chown=nextjs:nodejs /app/src/components/ /app/node_modules/@/components/
 COPY --from=builder --chown=nextjs:nodejs /app/src/lib/ /app/node_modules/@/lib/
 COPY --from=builder --chown=nextjs:nodejs /app/src/app/ /app/node_modules/@/app/
+COPY --from=builder --chown=nextjs:nodejs /app/src/types/ /app/node_modules/@/types/
 
 # Copiar arquivos de configuração necessários
 COPY --from=builder /app/package.json ./
