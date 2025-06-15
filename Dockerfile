@@ -19,7 +19,7 @@ COPY . .
 
 # Definir variáveis de ambiente para build
 ENV NEXT_TELEMETRY_DISABLED 1
-ENV NODE_ENV=development
+ENV NODE_ENV development
 
 # Build da aplicação
 RUN npm run build
@@ -45,6 +45,9 @@ RUN chown -R nextjs:nodejs ./public/uploads
 # Copiar arquivos de build
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
+
+# Garantir que os componentes estejam disponíveis
+COPY --from=builder --chown=nextjs:nodejs /app/src/components ./src/components
 
 # Copiar arquivos de configuração necessários
 COPY --from=builder /app/next.config.js ./
