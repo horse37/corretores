@@ -1,4 +1,4 @@
-tentei fazer o # Dockerfile para projeto Next.js
+# Dockerfile para projeto Next.js
 # Multi-stage build para otimizar o tamanho da imagem
 # Configurado para banco de dados externo
 
