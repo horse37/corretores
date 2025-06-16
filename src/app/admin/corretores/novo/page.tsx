@@ -119,9 +119,15 @@ export default function NovoCorretor() {
         try {
           console.log('Iniciando upload da foto...');
           
-          // Usar fetchAuthApi para garantir que o token seja enviado
-          const uploadResponse = await fetchAuthApi('admin/upload', {
+          // Obter a URL base da API
+          const apiBaseUrl = getApiBaseUrl();
+          const token = localStorage.getItem('token');
+          
+          const uploadResponse = await fetch(`${apiBaseUrl}/admin/upload`, {
             method: 'POST',
+            headers: {
+              'Authorization': `Bearer ${token}`
+            },
             body: formDataUpload
           });
           
@@ -155,10 +161,14 @@ export default function NovoCorretor() {
 
       console.log('Enviando dados do corretor:', { ...submitData, senha: '***' });
 
-      const response = await fetchAuthApi('admin/corretores', {
+      const apiBaseUrl = getApiBaseUrl();
+      const token = localStorage.getItem('token');
+      
+      const response = await fetch(`${apiBaseUrl}/admin/corretores`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
         },
         body: JSON.stringify(submitData)
       });

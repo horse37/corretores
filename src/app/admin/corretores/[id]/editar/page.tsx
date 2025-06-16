@@ -174,8 +174,15 @@ export default function EditarCorretor() {
         
         try {
           console.log('Iniciando upload da foto...')
-          const uploadResponse = await fetchAuthApi('admin/upload', {
+          // Obter a URL base da API
+          const apiBaseUrl = getApiBaseUrl()
+          const token = localStorage.getItem('token')
+          
+          const uploadResponse = await fetch(`${apiBaseUrl}/admin/upload`, {
             method: 'POST',
+            headers: {
+              'Authorization': `Bearer ${token}`
+            },
             body: formDataUpload
           })
           
@@ -212,10 +219,14 @@ export default function EditarCorretor() {
         submitData.senha = formData.senha
       }
 
-      const response = await fetchAuthApi(`admin/corretores/${params.id}`, {
+      const apiBaseUrl = getApiBaseUrl();
+      const token = localStorage.getItem('token');
+      
+      const response = await fetch(`${apiBaseUrl}/admin/corretores/${params.id}`, {
         method: 'PUT',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
         },
         body: JSON.stringify(submitData)
       })
