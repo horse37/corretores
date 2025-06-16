@@ -4,7 +4,7 @@
  */
 
 // Obtém a URL base da API do ambiente
-const getApiBaseUrl = () => {
+export const getApiBaseUrl = () => {
   // Em ambiente de cliente (browser)
   if (typeof window !== 'undefined') {
     // Usa a URL atual do navegador como base para a API
