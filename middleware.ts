@@ -1,8 +1,20 @@
 import { NextRequest, NextResponse } from 'next/server'
 
 export function middleware(request: NextRequest) {
+  // Verificar se estamos em ambiente de produção
+  const isProd = process.env.NODE_ENV === 'production'
+  
   // Permitir acesso direto aos arquivos de upload sem processamento
   if (request.nextUrl.pathname.startsWith('/uploads/')) {
+    return NextResponse.next()
+  }
+  
+  // Lidar com a rota raiz em produção (para EasyPanel)
+  if (isProd && request.nextUrl.pathname === '/') {
+    // Verificar se a requisição já tem o cabeçalho X-Forwarded-Host (indicando que passou pelo proxy)
+    const hasForwardedHost = request.headers.get('x-forwarded-host')
+    
+    // Se estamos em produção e na rota raiz, garantir que a navegação funcione corretamente
     return NextResponse.next()
   }
 

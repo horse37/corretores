@@ -17,6 +17,8 @@ services:
       - UPLOAD_DIR=./public/uploads
       - PORT=4000
       - HOSTNAME=0.0.0.0
+      # URL base para o EasyPanel (substitua pelo seu domínio configurado no EasyPanel)
+      - NEXT_PUBLIC_BASE_URL=https://seu-dominio-configurado-no-easypanel
     volumes:
       - uploads:/app/public/uploads
     restart: unless-stopped
