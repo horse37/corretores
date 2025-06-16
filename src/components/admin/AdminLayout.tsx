@@ -14,6 +14,7 @@ import {
   Plus,
   Settings
 } from 'lucide-react'
+import { fetchAuthApi } from '@/lib/api'
 
 interface AdminLayoutProps {
   children: React.ReactNode
@@ -31,6 +32,7 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
   const pathname = usePathname()
   const [sidebarOpen, setSidebarOpen] = useState(false)
   const [corretor, setCorretor] = useState<CorretorInfo | null>(null)
+  const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
     const token = localStorage.getItem('token')
@@ -45,12 +47,9 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
       
       // Buscar informações atualizadas do corretor
       const fetchCorretorInfo = async () => {
+        setIsLoading(true)
         try {
-          const response = await fetch(`/api/admin/corretores/${payload.id}`, {
-            headers: {
-              'Authorization': `Bearer ${token}`
-            }
-          });
+          const response = await fetchAuthApi(`admin/corretores/${payload.id}`);
           
           if (response.ok) {
             const data = await response.json();
@@ -76,7 +75,15 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
               foto: corretorData?.foto || null
             });
           } else {
-            // Fallback para informações do token se a API falhar
+            // Se a resposta não for bem-sucedida, verificar se é um erro de autenticação
+            if (response.status === 401) {
+              console.error('Erro de autenticação ao buscar informações do corretor');
+              localStorage.removeItem('token');
+              router.push('/login');
+              return;
+            }
+            
+            // Fallback para informações do token se a API falhar por outro motivo
             setCorretor({
               id: payload.id,
               nome: payload.nome,
@@ -93,6 +100,8 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
               email: payload.email,
               foto: payload.foto || null
           });
+        } finally {
+          setIsLoading(false);
         }
       };
       

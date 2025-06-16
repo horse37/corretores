@@ -5,8 +5,8 @@ import { requireAuth } from '@/lib/auth'
 export async function GET(request: NextRequest) {
   try {
     // Verificar autenticação
-    const corretor = requireAuth(request)
-    if (!corretor) {
+    const authResult = await requireAuth(request)
+    if (!authResult.success) {
       return NextResponse.json(
         { message: 'Não autorizado' },
         { status: 401 }

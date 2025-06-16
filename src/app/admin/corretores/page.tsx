@@ -10,6 +10,7 @@ import { Input } from '@/components/ui/input'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import Image from 'next/image'
 import toast from 'react-hot-toast'
+import { fetchAuthApi } from '@/lib/api'
 
 interface Corretor {
   id: number
@@ -55,11 +56,7 @@ export default function Corretores() {
       if (searchTerm) params.append('search', searchTerm)
       if (statusFilter !== 'todos') params.append('status', statusFilter)
 
-      const response = await fetch(`/api/admin/corretores?${params}`, {
-        headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
-        }
-      })
+      const response = await fetchAuthApi(`admin/corretores?${params}`)
 
       if (!response.ok) {
         throw new Error('Erro ao carregar corretores')
@@ -106,12 +103,8 @@ export default function Corretores() {
 
   const handleToggleStatus = async (id: number, currentStatus: boolean) => {
     try {
-      const response = await fetch(`/api/admin/corretores/${id}`, {
+      const response = await fetchAuthApi(`admin/corretores/${id}`, {
         method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
-        },
         body: JSON.stringify({ ativo: !currentStatus })
       })
 
@@ -164,11 +157,8 @@ export default function Corretores() {
 
   const confirmDelete = async (id: number) => {
     try {
-      const response = await fetch(`/api/admin/corretores/${id}`, {
-        method: 'DELETE',
-        headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
-        }
+      const response = await fetchAuthApi(`admin/corretores/${id}`, {
+        method: 'DELETE'
       })
 
       if (!response.ok) {

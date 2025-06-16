@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { Building, Users, MessageSquare, TrendingUp, Plus, Eye, Edit } from 'lucide-react'
 import AdminLayout from '@/components/admin/AdminLayout'
+import { fetchAuthApi } from '@/lib/api'
 
 
 
@@ -36,16 +37,19 @@ export default function AdminDashboard() {
 
   const fetchStats = async () => {
     try {
-      const token = localStorage.getItem('token')
-      const response = await fetch('/api/admin/stats', {
-        headers: {
-          'Authorization': `Bearer ${token}`,
-        },
-      })
+      const response = await fetchAuthApi('admin/stats')
 
       if (response.ok) {
         const data = await response.json()
         setStats(data)
+      } else {
+        // Se a resposta não for bem-sucedida, verificar se é um erro de autenticação
+        if (response.status === 401) {
+          console.error('Erro de autenticação ao buscar estatísticas')
+          localStorage.removeItem('token')
+          router.push('/login')
+          return
+        }
       }
     } catch (error) {
       console.error('Erro ao carregar estatísticas:', error)

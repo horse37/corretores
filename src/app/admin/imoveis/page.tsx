@@ -6,6 +6,7 @@ import Link from 'next/link'
 import { Plus, Search, Filter, Edit, Trash2, Eye } from 'lucide-react'
 import AdminLayout from '@/components/admin/AdminLayout'
 import toast from 'react-hot-toast'
+import { fetchAuthApi } from '@/lib/api'
 
 interface Imovel {
   id: number
@@ -47,11 +48,7 @@ export default function AdminImoveisPage() {
       if (tipoFilter) params.append('tipo', tipoFilter)
       if (searchTerm) params.append('search', searchTerm)
 
-      const response = await fetch(`/api/admin/imoveis?${params.toString()}`, {
-        headers: {
-          'Authorization': `Bearer ${token}`,
-        },
-      })
+      const response = await fetchAuthApi(`admin/imoveis?${params.toString()}`)
 
       if (response.ok) {
         const data = await response.json()

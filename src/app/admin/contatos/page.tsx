@@ -10,6 +10,7 @@ import { Input } from '@/components/ui/input'
 import { Badge } from '@/components/ui/badge'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import toast from 'react-hot-toast'
+import { fetchAuthApi } from '@/lib/api'
 
 interface Contato {
   id: number
@@ -67,11 +68,7 @@ export default function Contatos() {
       if (searchTerm) params.append('search', searchTerm)
       if (statusFilter) params.append('status', statusFilter)
 
-      const response = await fetch(`/api/admin/contatos?${params}`, {
-        headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
-        }
-      })
+      const response = await fetchAuthApi(`admin/contatos?${params}`)
 
       if (!response.ok) {
         throw new Error('Erro ao buscar contatos')
@@ -94,12 +91,8 @@ export default function Contatos() {
 
   const handleStatusChange = async (id: number, newStatus: string) => {
     try {
-      const response = await fetch(`/api/admin/contatos/${id}`, {
+      const response = await fetchAuthApi(`admin/contatos/${id}`, {
         method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
-        },
         body: JSON.stringify({ status: newStatus })
       })
 
@@ -143,12 +136,8 @@ export default function Contatos() {
 
   const confirmDelete = async (id: number) => {
     try {
-      const token = localStorage.getItem('token')
-      const response = await fetch(`/api/admin/contatos/${id}`, {
-        method: 'DELETE',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-        },
+      const response = await fetchAuthApi(`admin/contatos/${id}`, {
+        method: 'DELETE'
       })
 
       if (!response.ok) {

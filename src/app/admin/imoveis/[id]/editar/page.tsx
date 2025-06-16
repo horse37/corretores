@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { useRouter, useParams } from 'next/navigation';
 import { ArrowLeft, Save, Loader2 } from 'lucide-react';
 import toast from 'react-hot-toast';
+import { fetchAuthApi } from '@/lib/api';
 
 interface ImovelForm {
   titulo: string;
@@ -76,13 +77,7 @@ export default function EditarImovel() {
   const fetchImovel = async () => {
     try {
       setLoadingData(true);
-      const token = localStorage.getItem('token');
-      const response = await fetch(`/api/admin/imoveis/${id}`, {
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
-        }
-      });
+      const response = await fetchAuthApi(`admin/imoveis/${id}`);
       
       if (!response.ok) {
         throw new Error('Erro ao carregar imóvel');
@@ -278,7 +273,11 @@ export default function EditarImovel() {
         formDataToSend.append('videos', video);
       });
       
-      const response = await fetch(`/api/admin/imoveis/${id}`, {
+      // Importando a função getApiBaseUrl da lib/api para obter a URL base da API
+      const { getApiBaseUrl } = await import('@/lib/api');
+      const apiBaseUrl = getApiBaseUrl();
+      
+      const response = await fetch(`${apiBaseUrl}/admin/imoveis/${id}`, {
         method: 'PUT',
         headers: {
           'Authorization': `Bearer ${token}`

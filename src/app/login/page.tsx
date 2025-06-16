@@ -6,6 +6,7 @@ import Link from 'next/link'
 import { Building, Lock, Mail } from 'lucide-react'
 import Header from '@/components/layout/Header'
 import Footer from '@/components/layout/Footer'
+import { fetchApi } from '@/lib/api'
 
 export default function LoginPage() {
   const router = useRouter()
@@ -20,7 +21,7 @@ export default function LoginPage() {
     setError('')
 
     try {
-      const response = await fetch('/api/auth/login', {
+      const response = await fetchApi('auth/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

@@ -27,11 +27,11 @@ build/
 *.gz
 
 # Arquivos de configura��o/gera��o autom�tica
-next-env.d.ts
-next.config.js
-postcss.config.js
-tailwind.config.ts
-tsconfig.json
+# next-env.d.ts
+# next.config.js
+# postcss.config.js
+# tailwind.config.ts
+# tsconfig.json
 
 # Arquivos de banco de dados/SQL
 *.sql

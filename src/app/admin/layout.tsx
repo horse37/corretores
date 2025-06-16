@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { toast, Toaster } from 'react-hot-toast'
+import { fetchAuthApi } from '@/lib/api'
 
 interface AdminLayoutProps {
   children: React.ReactNode
@@ -33,11 +34,7 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
         return
       }
 
-      const response = await fetch('/api/admin/auth/me', {
-        headers: {
-          'Authorization': `Bearer ${token}`
-        }
-      })
+      const response = await fetchAuthApi('admin/auth/me')
 
       if (response.ok) {
         const userData = await response.json()
