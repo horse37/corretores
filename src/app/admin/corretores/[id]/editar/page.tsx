@@ -11,6 +11,7 @@ import { Label } from '@/components/ui/label'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import Image from 'next/image'
 import toast from 'react-hot-toast'
+import { fetchAuthApi, getApiBaseUrl } from '@/lib/api'
 
 interface Corretor {
   id: number
@@ -69,11 +70,7 @@ export default function EditarCorretor() {
   useEffect(() => {
     const fetchCorretor = async () => {
       try {
-        const response = await fetch(`/api/admin/corretores/${params.id}`, {
-          headers: {
-            'Authorization': `Bearer ${localStorage.getItem('token')}`
-          }
-        })
+        const response = await fetchAuthApi(`admin/corretores/${params.id}`)
 
         if (!response.ok) {
           throw new Error('Erro ao buscar dados do corretor')
@@ -177,11 +174,8 @@ export default function EditarCorretor() {
         
         try {
           console.log('Iniciando upload da foto...')
-          const uploadResponse = await fetch('/api/admin/upload', {
+          const uploadResponse = await fetchAuthApi('admin/upload', {
             method: 'POST',
-            headers: {
-              'Authorization': `Bearer ${localStorage.getItem('token')}`
-            },
             body: formDataUpload
           })
           
@@ -218,11 +212,10 @@ export default function EditarCorretor() {
         submitData.senha = formData.senha
       }
 
-      const response = await fetch(`/api/admin/corretores/${params.id}`, {
+      const response = await fetchAuthApi(`admin/corretores/${params.id}`, {
         method: 'PUT',
         headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
+          'Content-Type': 'application/json'
         },
         body: JSON.stringify(submitData)
       })

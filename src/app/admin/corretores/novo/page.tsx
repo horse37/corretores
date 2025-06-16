@@ -11,6 +11,7 @@ import { Label } from '@/components/ui/label'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import Image from 'next/image'
 import toast from 'react-hot-toast'
+import { fetchAuthApi, getApiBaseUrl } from '@/lib/api'
 
 interface CorretorForm {
   nome: string
@@ -117,7 +118,9 @@ export default function NovoCorretor() {
         
         try {
           console.log('Iniciando upload da foto...');
-          const uploadResponse = await fetch('/api/admin/upload', {
+          
+          // Usar fetchAuthApi para garantir que o token seja enviado
+          const uploadResponse = await fetchAuthApi('admin/upload', {
             method: 'POST',
             body: formDataUpload
           });
@@ -152,7 +155,7 @@ export default function NovoCorretor() {
 
       console.log('Enviando dados do corretor:', { ...submitData, senha: '***' });
 
-      const response = await fetch('/api/admin/corretores', {
+      const response = await fetchAuthApi('admin/corretores', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
