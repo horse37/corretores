@@ -18,7 +18,10 @@ services:
       - PORT=4000
       - HOSTNAME=0.0.0.0
       # URL base para o EasyPanel (substitua pelo seu domínio configurado no EasyPanel)
-      - NEXT_PUBLIC_BASE_URL=https://seu-dominio-configurado-no-easypanel
+      # IMPORTANTE: Use o domínio real configurado no EasyPanel, sem a porta
+      - NEXT_PUBLIC_BASE_URL=https://imobiliaria.infopowersistemas.com.br
+      # Configuração para API
+      - NEXT_PUBLIC_API_URL=https://imobiliaria.infopowersistemas.com.br/api
     volumes:
       - uploads:/app/public/uploads
     restart: unless-stopped

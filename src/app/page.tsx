@@ -1,10 +1,13 @@
 import { Suspense } from 'react'
-import Header from '@/components/layout/Header'
-import Footer from '@/components/layout/Footer'
-import PropertyList from '@/components/properties/PropertyList'
-import PropertyFilters from '@/components/properties/PropertyFilters'
-import Hero from '@/components/home/Hero'
+import dynamic from 'next/dynamic'
 import LoadingSpinner from '@/components/ui/LoadingSpinner'
+
+// Importação dinâmica dos componentes para evitar problemas de renderização no EasyPanel
+const Header = dynamic(() => import('@/components/layout/Header'), { ssr: true })
+const Footer = dynamic(() => import('@/components/layout/Footer'), { ssr: true })
+const PropertyList = dynamic(() => import('@/components/properties/PropertyList'), { ssr: true })
+const PropertyFilters = dynamic(() => import('@/components/properties/PropertyFilters'), { ssr: true })
+const Hero = dynamic(() => import('@/components/home/Hero'), { ssr: true })
 
 export default function HomePage() {
   return (
