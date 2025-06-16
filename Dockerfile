@@ -119,7 +119,7 @@ WORKDIR /app
 # Usando NODE_ENV=production que é o valor padrão esperado pelo Next.js em produção
 ENV NODE_ENV=production
 ENV NEXT_TELEMETRY_DISABLED=1
-ENV PORT=3000
+ENV PORT=4000
 ENV HOSTNAME="0.0.0.0"
 
 # Criar usuário não-root para produção
@@ -164,7 +164,7 @@ COPY --from=builder --chown=nextjs:nodejs /app/jsconfig.json /app/node_modules/@
 USER nextjs
 
 # Expor porta da aplicação
-EXPOSE 3000
+EXPOSE 4000
 
 # Comando para iniciar o servidor
 CMD ["node", "server.js"]
