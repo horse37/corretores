@@ -250,7 +250,7 @@ export async function PUT(
         banheiros = $10, vagas_garagem = $11, endereco = $12, bairro = $13,
         cidade = $14, estado = $15, cep = $16, caracteristicas = $17,
         fotos = $18, videos = $19, latitude = $20, longitude = $21, updated_at = NOW()
-      WHERE id = $22 AND corretor_id = $23
+      WHERE id = $22
       RETURNING *`,
       [
         titulo, descricao, tipo, finalidade, status || 'disponivel',
@@ -259,7 +259,7 @@ export async function PUT(
         endereco, bairro, cidade, estado, cep,
         JSON.stringify(caracteristicas || []), JSON.stringify(todasFotos), JSON.stringify(todosVideos),
         parseNumericField(latitude), parseNumericField(longitude),
-        imovelId, authResult.userId
+        imovelId
       ]
     )
 
@@ -307,19 +307,19 @@ export async function DELETE(
     }
 
     // Buscar o imóvel para obter as fotos antes de excluir
-    const imovelResult = await query(
-      'SELECT fotos FROM imoveis WHERE id = $1 AND corretor_id = $2',
-      [imovelId, authResult.userId]
+    const fotosResult = await query(
+      'SELECT fotos FROM imoveis WHERE id = $1',
+      [imovelId]
     )
 
-    if (imovelResult.length === 0) {
+    if (fotosResult.length === 0) {
       return NextResponse.json(
-        { message: 'Imóvel não encontrado ou você não tem permissão para excluí-lo' },
+        { message: 'Imóvel não encontrado' },
         { status: 404 }
       )
     }
 
-    const imovel = imovelResult[0]
+    const imovel = fotosResult[0]
     
     // Excluir fotos do sistema de arquivos
     if (imovel.fotos) {
@@ -341,9 +341,9 @@ export async function DELETE(
     }
 
     // Excluir imóvel do banco de dados
-    await query(
-      'DELETE FROM imoveis WHERE id = $1 AND corretor_id = $2',
-      [imovelId, authResult.userId]
+ const result = await query(
+      'DELETE FROM imoveis WHERE id = $1',
+      [imovelId]
     )
 
     return NextResponse.json({
