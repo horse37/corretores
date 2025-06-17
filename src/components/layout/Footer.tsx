@@ -98,16 +98,16 @@ const Footer = () => {
               <div className="flex items-center space-x-3">
                 <MapPin className="w-5 h-5 text-primary-400 flex-shrink-0" />
                 <span className="text-gray-400 text-sm">
-                  Rua das Flores, 123<br />
-                  Centro - São Paulo/SP<br />
-                  CEP: 01234-567
+                  Av. Europa, 559<br />
+                  Jardim Piza - Londrina/PR<br />
+                  CEP: 86041-000
                 </span>
               </div>
               <div className="flex items-center space-x-3">
                 <Phone className="w-5 h-5 text-primary-400 flex-shrink-0" />
                 <div className="text-gray-400 text-sm">
-                  <div>(11) 3456-7890</div>
-                  <div>(11) 99999-8888</div>
+                  <div>(43) 3017-3121</div>
+                  
                 </div>
               </div>
               <div className="flex items-center space-x-3">
