@@ -91,7 +91,7 @@ export default function EditarImovel() {
         descricao: imovel.descricao || '',
         tipo: imovel.tipo || '',
         finalidade: imovel.finalidade || '',
-        preco: imovel.preco?.toString() || '',
+        preco: imovel.preco ? parseFloat(imovel.preco).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : '',
         area_total: imovel.area_total?.toString() || '',
         area_construida: imovel.area_construida?.toString() || '',
         quartos: imovel.quartos?.toString() || '',
@@ -119,11 +119,34 @@ export default function EditarImovel() {
     }
   };
 
+  const formatCurrency = (value: string) => {
+    // Remove tudo que não é dígito
+    const numericValue = value.replace(/\D/g, '');
+    
+    // Converte para número e divide por 100 para ter os centavos
+    const numberValue = parseFloat(numericValue) / 100;
+    
+    // Formata como moeda brasileira
+    return numberValue.toLocaleString('pt-BR', {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2
+    });
+  };
+
   const handleInputChange = (field: keyof ImovelForm, value: string) => {
-    setFormData(prev => ({
-      ...prev,
-      [field]: value
-    }));
+    if (field === 'preco') {
+      // Para o campo preço, aplica a máscara de moeda
+      const formattedValue = formatCurrency(value);
+      setFormData(prev => ({
+        ...prev,
+        [field]: formattedValue
+      }));
+    } else {
+      setFormData(prev => ({
+        ...prev,
+        [field]: value
+      }));
+    }
   };
 
   const buscarCep = async (cep: string) => {
@@ -253,7 +276,14 @@ export default function EditarImovel() {
       // Adicionar dados do formulário
       Object.entries(formData).forEach(([key, value]) => {
         if (key !== 'fotos' && key !== 'videos' && key !== 'fotosExistentes' && key !== 'videosExistentes') {
-          formDataToSend.append(key, value as string);
+          // Converter o preço formatado para um valor numérico antes de enviar
+          if (key === 'preco') {
+            // Remove R$, pontos e converte vírgula para ponto
+            const numericValue = (value as string).replace(/[R$\s.]/g, '').replace(',', '.');
+            formDataToSend.append(key, numericValue);
+          } else {
+            formDataToSend.append(key, value as string);
+          }
         }
       });
       
@@ -406,11 +436,10 @@ export default function EditarImovel() {
               <label htmlFor="preco" className="block text-sm font-medium text-gray-700">Preço (R$) *</label>
               <input
                 id="preco"
-                type="number"
-                step="0.01"
+                type="text"
                 value={formData.preco}
                 onChange={(e) => handleInputChange('preco', e.target.value)}
-                placeholder="0.00"
+                placeholder="0,00"
                 required
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
               />
