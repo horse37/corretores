@@ -187,7 +187,7 @@ const ContatoPage = () => {
                         rel="noopener noreferrer"
                         className="hover:text-green-600 transition-colors"
                       >
-                        (11) 99999-9999
+                        
                       </a>
                     </p>
                     <p className="text-sm text-gray-500">
