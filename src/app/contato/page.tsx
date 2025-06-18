@@ -110,9 +110,10 @@ const ContatoPage = () => {
                       Endereço
                     </h3>
                     <p className="text-gray-600">
-                      Rua das Flores, 123<br />
-                      Centro - São Paulo, SP<br />
-                      CEP: 01234-567
+
+                      Av. Europa, 559<br />
+                      Jardim Piza - Londrina/PR<br />
+                      CEP: 86041-000
                     </p>
                   </div>
                 </div>
@@ -127,12 +128,12 @@ const ContatoPage = () => {
                     </h3>
                     <p className="text-gray-600">
                       <a href="tel:+5511999999999" className="hover:text-primary-600 transition-colors">
-                        (11) 99999-9999
+                         <div>(43) 3017-3121</div>
                       </a>
                     </p>
                     <p className="text-gray-600">
                       <a href="tel:+551133333333" className="hover:text-primary-600 transition-colors">
-                        (11) 3333-3333
+                        
                       </a>
                     </p>
                   </div>
@@ -148,14 +149,10 @@ const ContatoPage = () => {
                     </h3>
                     <p className="text-gray-600">
                       <a href="mailto:contato@imobiliaria.com" className="hover:text-primary-600 transition-colors">
-                        contato@imobiliaria.com
+                        
                       </a>
                     </p>
-                    <p className="text-gray-600">
-                      <a href="mailto:vendas@imobiliaria.com" className="hover:text-primary-600 transition-colors">
-                        vendas@imobiliaria.com
-                      </a>
-                    </p>
+                   
                   </div>
                 </div>
                 

@@ -84,7 +84,6 @@ const Footer = () => {
             <h3 className="text-lg font-semibold mb-4">Serviços</h3>
             <ul className="space-y-2">
               <li className="text-gray-400">Venda de Imóveis</li>
-              <li className="text-gray-400">Locação de Imóveis</li>
               <li className="text-gray-400">Avaliação Imobiliária</li>
               <li className="text-gray-400">Consultoria Imobiliária</li>
               <li className="text-gray-400">Financiamento</li>
