@@ -146,7 +146,23 @@ export async function POST(request: NextRequest) {
         cidade: formData.get('cidade') as string,
         estado: formData.get('estado') as string,
         cep: formData.get('cep') as string,
-        caracteristicas: formData.get('caracteristicas') ? JSON.parse(formData.get('caracteristicas') as string) : []
+        caracteristicas: (() => {
+          const caracteristicasValue = formData.get('caracteristicas') as string
+          if (!caracteristicasValue || caracteristicasValue.trim() === '') {
+            return []
+          }
+          // Se começar com [ ou {, tenta fazer parse como JSON
+          if (caracteristicasValue.trim().startsWith('[') || caracteristicasValue.trim().startsWith('{')) {
+            try {
+              return JSON.parse(caracteristicasValue)
+            } catch (error) {
+              console.error('Erro ao fazer parse das características:', error)
+              return []
+            }
+          }
+          // Caso contrário, trata como string simples e converte para array
+          return caracteristicasValue.split(',').map(item => item.trim()).filter(item => item.length > 0)
+        })()
       }
       
       // Processar fotos e vídeos
