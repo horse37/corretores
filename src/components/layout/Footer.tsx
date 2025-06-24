@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import Image from 'next/image'
 import { Building, Phone, Mail, MapPin, Facebook, Instagram, Linkedin } from 'lucide-react'
 
 const Footer = () => {
@@ -11,8 +12,14 @@ const Footer = () => {
           {/* Logo e Descrição */}
           <div className="space-y-4">
             <div className="flex items-center space-x-2">
-              <div className="w-8 h-8 bg-primary-600 rounded-lg flex items-center justify-center">
-                <Building className="w-5 h-5 text-white" />
+              <div className="w-8 h-8 rounded-lg overflow-hidden">
+                <Image 
+                  src="/logo.jpg" 
+                  alt="Logo Cooperativa de Corretores" 
+                  width={32} 
+                  height={32} 
+                  className="w-full h-full object-cover"
+                />
               </div>
               <span className="text-xl font-bold">
               Cooperativa de Corretores

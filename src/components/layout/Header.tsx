@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
+import Image from 'next/image'
 import { Menu, X, Home, Building, Phone, User } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
 
@@ -23,8 +24,14 @@ const Header = () => {
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
           <Link href="/" className="flex items-center space-x-2">
-            <div className="w-8 h-8 bg-primary-600 rounded-lg flex items-center justify-center">
-              <Building className="w-5 h-5 text-white" />
+            <div className="w-8 h-8 rounded-lg overflow-hidden">
+              <Image 
+                src="/logo.jpg" 
+                alt="Logo Cooperativa de Corretores" 
+                width={32} 
+                height={32} 
+                className="w-full h-full object-cover"
+              />
             </div>
             <span className="text-xl font-bold text-gray-900">
               Cooperativa de Corretores

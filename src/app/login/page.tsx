@@ -3,7 +3,9 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
-import { Building, Lock, Mail } from 'lucide-react'
+import Image from 'next/image'
+import { Building, Eye, EyeOff, Lock, Mail } from 'lucide-react'
+import toast from 'react-hot-toast'
 import Header from '@/components/layout/Header'
 import Footer from '@/components/layout/Footer'
 import { fetchApi } from '@/lib/api'
@@ -55,8 +57,14 @@ export default function LoginPage() {
           <div className="bg-white rounded-lg shadow-md overflow-hidden">
             <div className="p-6 sm:p-8">
               <div className="flex justify-center mb-6">
-                <div className="w-12 h-12 bg-primary-600 rounded-lg flex items-center justify-center">
-                  <Building className="w-7 h-7 text-white" />
+                <div className="w-12 h-12 rounded-lg overflow-hidden">
+                  <Image 
+                    src="/logo.jpg" 
+                    alt="Logo Cooperativa de Corretores" 
+                    width={48} 
+                    height={48} 
+                    className="w-full h-full object-cover"
+                  />
                 </div>
               </div>
               
