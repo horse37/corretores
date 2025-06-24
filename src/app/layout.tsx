@@ -6,14 +6,14 @@ import { Toaster } from '@/components/ui/toaster'
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
-  title: 'Imobiliária Moderna - Encontre seu imóvel ideal',
+  title: 'Cooperativa de Corretores - Encontre seu imóvel ideal',
   description: 'Site moderno para imobiliária com os melhores imóveis da região. Casas, apartamentos, terrenos e muito mais.',
   keywords: 'imobiliária, imóveis, casas, apartamentos, terrenos, venda, aluguel',
-  authors: [{ name: 'Imobiliária Moderna' }],
+  authors: [{ name: 'Cooperativa de Corretores' }],
 //  viewport: 'width=device-width, initial-scale=1',
   robots: 'index, follow',
   openGraph: {
-    title: 'Imobiliária Moderna - Encontre seu imóvel ideal',
+    title: 'Cooperativa de Corretores - Encontre seu imóvel ideal',
     description: 'Site moderno para imobiliária com os melhores imóveis da região.',
     type: 'website',
     locale: 'pt_BR',

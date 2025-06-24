@@ -146,6 +146,10 @@ export async function POST(request: NextRequest) {
         cidade: formData.get('cidade') as string,
         estado: formData.get('estado') as string,
         cep: formData.get('cep') as string,
+        proprietario: formData.get('proprietario') as string,
+        telefone: formData.get('telefone') as string,
+        email: formData.get('email') as string,
+        id_angariador: formData.get('id_angariador') ? parseInt(formData.get('id_angariador') as string) : null,
         caracteristicas: (() => {
           const caracteristicasValue = formData.get('caracteristicas') as string
           if (!caracteristicasValue || caracteristicasValue.trim() === '') {
@@ -190,6 +194,10 @@ export async function POST(request: NextRequest) {
       estado,
       cep,
       caracteristicas = [],
+      proprietario,
+      telefone,
+      email,
+      id_angariador,
       latitude,
       longitude,
     } = data
@@ -225,14 +233,16 @@ export async function POST(request: NextRequest) {
       `INSERT INTO imoveis (
         titulo, descricao, tipo, finalidade, preco, area_total, area_construida,
         quartos, banheiros, vagas_garagem, endereco, bairro, cidade, estado, cep,
-        caracteristicas, fotos, videos, latitude, longitude, corretor_id, status
+        caracteristicas, fotos, videos, latitude, longitude, corretor_id, status,
+        proprietario, telefone, email, id_angariador
       ) VALUES (
-        $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22
+        $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22, $23, $24, $25, $26
       ) RETURNING *`,
       [
         titulo, descricao, tipo, finalidade, preco, area_total, area_construida,
         quartos, banheiros, vagas_garagem, endereco, bairro, cidade, estado, cep,
-        JSON.stringify(caracteristicas), JSON.stringify(fotosUrls), JSON.stringify(videosUrls), latitude, longitude, authResult.userId, 'disponivel'
+        JSON.stringify(caracteristicas), JSON.stringify(fotosUrls), JSON.stringify(videosUrls), latitude, longitude, authResult.userId, 'disponivel',
+        proprietario, telefone, email, id_angariador
       ]
     )
 

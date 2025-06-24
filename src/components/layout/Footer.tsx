@@ -15,7 +15,7 @@ const Footer = () => {
                 <Building className="w-5 h-5 text-white" />
               </div>
               <span className="text-xl font-bold">
-                Imobiliária Moderna
+              Cooperativa de Corretores
               </span>
             </div>
             <p className="text-gray-400 text-sm leading-relaxed">
@@ -123,7 +123,7 @@ const Footer = () => {
         <div className="border-t border-gray-800 mt-8 pt-8">
           <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
             <p className="text-gray-400 text-sm">
-              © {currentYear} Imobiliária Moderna. Todos os direitos reservados.
+              © {currentYear} Cooperativa de Corretores. Todos os direitos reservados.
             </p>
             <div className="flex space-x-6 text-sm">
               <Link href="/privacidade" className="text-gray-400 hover:text-white transition-colors duration-200">

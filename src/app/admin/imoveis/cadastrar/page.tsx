@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { ArrowLeft, Loader2, Upload, Video, X } from 'lucide-react';
@@ -27,14 +27,26 @@ interface ImovelForm {
   latitude: string
   longitude: string
   caracteristicas: string
+  proprietario: string
+  telefone: string
+  email: string
+  id_angariador: string
   fotos: File[]
   videos: File[]
+}
+
+interface Corretor {
+  id: number
+  nome: string
+  email: string
 }
 
 export default function CadastrarImovelPage() {
   const router = useRouter()
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
+  const [corretores, setCorretores] = useState<Corretor[]>([])
+  const [loadingCorretores, setLoadingCorretores] = useState(false)
   
   const [formData, setFormData] = useState<ImovelForm>({
     titulo: '',
@@ -56,6 +68,10 @@ export default function CadastrarImovelPage() {
     latitude: '',
     longitude: '',
     caracteristicas: '',
+    proprietario: '',
+    telefone: '',
+    email: '',
+    id_angariador: '',
     fotos: [],
     videos: []
   })
@@ -76,10 +92,48 @@ export default function CadastrarImovelPage() {
     });
   };
 
+  const formatTelefone = (value: string) => {
+    // Remove tudo que não é dígito
+    const numericValue = value.replace(/\D/g, '');
+    
+    // Limita a 11 dígitos (DDD + 9 dígitos)
+    const limitedValue = numericValue.slice(0, 11);
+    
+    // Aplica a máscara de telefone
+    if (limitedValue.length <= 2) {
+      return limitedValue;
+    } else if (limitedValue.length <= 6) {
+      return `(${limitedValue.slice(0, 2)}) ${limitedValue.slice(2)}`;
+    } else if (limitedValue.length <= 10) {
+      return `(${limitedValue.slice(0, 2)}) ${limitedValue.slice(2, 6)}-${limitedValue.slice(6)}`;
+    } else {
+      return `(${limitedValue.slice(0, 2)}) ${limitedValue.slice(2, 7)}-${limitedValue.slice(7)}`;
+    }
+  };
+
+  const formatEmail = (value: string) => {
+    // Converte para minúsculas
+    return value.toLowerCase();
+  };
+
   const handleInputChange = (field: keyof ImovelForm, value: string) => {
     if (field === 'preco') {
       // Para o campo preço, aplica a máscara de moeda
       const formattedValue = formatCurrency(value);
+      setFormData(prev => ({
+        ...prev,
+        [field]: formattedValue
+      }));
+    } else if (field === 'telefone') {
+      // Para o campo telefone, aplica a máscara de telefone
+      const formattedValue = formatTelefone(value);
+      setFormData(prev => ({
+        ...prev,
+        [field]: formattedValue
+      }));
+    } else if (field === 'email') {
+      // Para o campo email, converte para minúsculas
+      const formattedValue = formatEmail(value);
       setFormData(prev => ({
         ...prev,
         [field]: formattedValue
@@ -130,6 +184,49 @@ export default function CadastrarImovelPage() {
       buscarCep(cleanCep);
     }
   };
+
+  const carregarCorretores = async () => {
+    try {
+      setLoadingCorretores(true);
+      const token = localStorage.getItem('token');
+      if (!token) {
+        router.push('/login');
+        return;
+      }
+
+      const { getApiBaseUrl } = await import('@/lib/api');
+      const apiBaseUrl = getApiBaseUrl();
+      
+      const response = await fetch(`${apiBaseUrl}/admin/corretores`, {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+
+      if (!response.ok) {
+        throw new Error('Erro ao carregar corretores');
+      }
+
+      const data = await response.json();
+      setCorretores(data.corretores || []);
+    } catch (error) {
+      console.error('Erro ao carregar corretores:', error);
+      toast.error('Erro ao carregar lista de corretores');
+    } finally {
+      setLoadingCorretores(false);
+    }
+  };
+
+  const limparAngariador = () => {
+    setFormData(prev => ({
+      ...prev,
+      id_angariador: ''
+    }));
+  };
+
+  useEffect(() => {
+    carregarCorretores();
+  }, []);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || []);
@@ -551,7 +648,78 @@ export default function CadastrarImovelPage() {
               </div>
             </div>
 
-            {/* Fotos do Imóvel */}
+            {/* Dados do Proprietário */}
+            <h3 className="text-lg font-medium text-gray-900 mt-6 mb-3">Dados do Proprietário</h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <label htmlFor="proprietario" className="block text-sm font-medium text-gray-700">Nome do Proprietário</label>
+                <input
+                  id="proprietario"
+                  type="text"
+                  value={formData.proprietario}
+                  onChange={(e) => handleInputChange('proprietario', e.target.value)}
+                  placeholder="Nome completo do proprietário"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                />
+              </div>
+
+              <div className="space-y-2">
+                <label htmlFor="telefone" className="block text-sm font-medium text-gray-700">Telefone</label>
+                <input
+                  id="telefone"
+                  type="text"
+                  value={formData.telefone}
+                  onChange={(e) => handleInputChange('telefone', e.target.value)}
+                  placeholder="(00) 00000-0000"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                />
+              </div>
+
+              <div className="space-y-2">
+                <label htmlFor="email" className="block text-sm font-medium text-gray-700">E-mail</label>
+                <input
+                  id="email"
+                  type="email"
+                  value={formData.email}
+                  onChange={(e) => handleInputChange('email', e.target.value)}
+                  placeholder="email@exemplo.com"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                />
+              </div>
+
+              <div className="space-y-2">
+                <label htmlFor="id_angariador" className="block text-sm font-medium text-gray-700">Angariador</label>
+                <div className="flex space-x-2">
+                  <select
+                    id="id_angariador"
+                    value={formData.id_angariador}
+                    onChange={(e) => handleInputChange('id_angariador', e.target.value)}
+                    disabled={loadingCorretores}
+                    className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  >
+                    <option value="">Selecione um angariador</option>
+                    {corretores.map((corretor) => (
+                      <option key={corretor.id} value={corretor.id}>
+                        {corretor.nome}
+                      </option>
+                    ))}
+                  </select>
+                  <button
+                    type="button"
+                    onClick={limparAngariador}
+                    className="px-3 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 transition-colors"
+                    title="Limpar seleção"
+                  >
+                    <X className="h-4 w-4" />
+                  </button>
+                </div>
+                {loadingCorretores && (
+                  <p className="text-sm text-gray-500">Carregando corretores...</p>
+                )}
+              </div>
+            </div>
+
+            {/* Fotos */}
             <h3 className="text-lg font-medium text-gray-900 mt-6 mb-3">Fotos do Imóvel</h3>
             <div className="space-y-4">
               <div className="flex items-center justify-center w-full">

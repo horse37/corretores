@@ -156,6 +156,10 @@ export async function PUT(
         estado: formData.get('estado') as string,
         cep: formData.get('cep') as string,
         caracteristicas: formData.get('caracteristicas') as string,
+        proprietario: formData.get('proprietario') as string,
+        telefone: formData.get('telefone') as string,
+        email: formData.get('email') as string,
+        id_angariador: formData.get('id_angariador') as string,
         latitude: formData.get('latitude') as string,
         longitude: formData.get('longitude') as string
       }
@@ -193,6 +197,10 @@ export async function PUT(
       estado,
       cep,
       caracteristicas,
+      proprietario,
+      telefone,
+      email,
+      id_angariador,
       latitude,
       longitude,
     } = data
@@ -249,8 +257,9 @@ export async function PUT(
         preco = $6, area_total = $7, area_construida = $8, quartos = $9,
         banheiros = $10, vagas_garagem = $11, endereco = $12, bairro = $13,
         cidade = $14, estado = $15, cep = $16, caracteristicas = $17,
-        fotos = $18, videos = $19, latitude = $20, longitude = $21, updated_at = NOW()
-      WHERE id = $22
+        fotos = $18, videos = $19, latitude = $20, longitude = $21,
+        proprietario = $22, telefone = $23, email = $24, id_angariador = $25, updated_at = NOW()
+      WHERE id = $26
       RETURNING *`,
       [
         titulo, descricao, tipo, finalidade, status || 'disponivel',
@@ -259,6 +268,7 @@ export async function PUT(
         endereco, bairro, cidade, estado, cep,
         JSON.stringify(caracteristicas || []), JSON.stringify(todasFotos), JSON.stringify(todosVideos),
         parseNumericField(latitude), parseNumericField(longitude),
+        proprietario, telefone, email, parseIntegerField(id_angariador),
         imovelId
       ]
     )

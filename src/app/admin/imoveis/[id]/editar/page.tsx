@@ -2,9 +2,14 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter, useParams } from 'next/navigation';
-import { ArrowLeft, Save, Loader2 } from 'lucide-react';
+import { ArrowLeft, Save, Loader2, X } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { fetchAuthApi } from '@/lib/api';
+
+interface Corretor {
+  id: number;
+  nome: string;
+}
 
 interface ImovelForm {
   titulo: string;
@@ -26,6 +31,10 @@ interface ImovelForm {
   longitude: string;
   status: string;
   caracteristicas: string;
+  proprietario: string;
+  telefone: string;
+  email: string;
+  id_angariador: string;
   fotos: File[];
   videos: File[];
   fotosExistentes: string[];
@@ -57,6 +66,10 @@ export default function EditarImovel() {
     longitude: '',
     status: 'disponivel',
     caracteristicas: '',
+    proprietario: '',
+    telefone: '',
+    email: '',
+    id_angariador: '',
     fotos: [],
     videos: [],
     fotosExistentes: [],
@@ -67,12 +80,41 @@ export default function EditarImovel() {
   const [loadingData, setLoadingData] = useState(true);
   const [loadingCep, setLoadingCep] = useState(false);
   const [error, setError] = useState('');
+  const [corretores, setCorretores] = useState<Corretor[]>([]);
+  const [loadingCorretores, setLoadingCorretores] = useState(false);
 
   useEffect(() => {
     if (id) {
       fetchImovel();
     }
+    carregarCorretores();
   }, [id]);
+
+  const carregarCorretores = async () => {
+    try {
+      setLoadingCorretores(true);
+      const response = await fetchAuthApi('admin/corretores');
+      
+      if (!response.ok) {
+        throw new Error('Erro ao carregar corretores');
+      }
+
+      const data = await response.json();
+      setCorretores(data.corretores || data);
+    } catch (error) {
+      console.error('Erro ao carregar corretores:', error);
+      toast.error('Erro ao carregar lista de corretores');
+    } finally {
+      setLoadingCorretores(false);
+    }
+  };
+
+  const limparAngariador = () => {
+    setFormData(prev => ({
+      ...prev,
+      id_angariador: ''
+    }));
+  };
 
   const fetchImovel = async () => {
     try {
@@ -106,6 +148,10 @@ export default function EditarImovel() {
         longitude: imovel.longitude?.toString() || '',
         status: imovel.status || 'disponivel',
         caracteristicas: Array.isArray(imovel.caracteristicas) ? imovel.caracteristicas.join(', ') : (imovel.caracteristicas || ''),
+        proprietario: imovel.proprietario || '',
+        telefone: imovel.telefone || '',
+        email: imovel.email || '',
+        id_angariador: imovel.id_angariador?.toString() || '',
         fotos: [],
         videos: [],
         fotosExistentes: Array.isArray(imovel.fotos) ? imovel.fotos : (imovel.fotos ? JSON.parse(imovel.fotos) : []),
@@ -133,10 +179,40 @@ export default function EditarImovel() {
     });
   };
 
+  const formatTelefone = (value: string) => {
+    // Remove tudo que não é dígito
+    const numericValue = value.replace(/\D/g, '');
+    
+    // Aplica a máscara de telefone
+    if (numericValue.length <= 10) {
+      return numericValue.replace(/(\d{2})(\d{4})(\d{4})/, '($1) $2-$3');
+    } else {
+      return numericValue.replace(/(\d{2})(\d{5})(\d{4})/, '($1) $2-$3');
+    }
+  };
+
+  const formatEmail = (value: string) => {
+    return value.toLowerCase();
+  };
+
   const handleInputChange = (field: keyof ImovelForm, value: string) => {
     if (field === 'preco') {
       // Para o campo preço, aplica a máscara de moeda
       const formattedValue = formatCurrency(value);
+      setFormData(prev => ({
+        ...prev,
+        [field]: formattedValue
+      }));
+    } else if (field === 'telefone') {
+      // Para o campo telefone, aplica a máscara de telefone
+      const formattedValue = formatTelefone(value);
+      setFormData(prev => ({
+        ...prev,
+        [field]: formattedValue
+      }));
+    } else if (field === 'email') {
+      // Para o campo email, converte para minúsculas
+      const formattedValue = formatEmail(value);
       setFormData(prev => ({
         ...prev,
         [field]: formattedValue
@@ -641,6 +717,77 @@ export default function EditarImovel() {
                 rows={3}
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
               />
+            </div>
+
+            {/* Dados do Proprietário */}
+            <h3 className="text-lg font-medium text-gray-900 mt-6 mb-3">Dados do Proprietário</h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <label htmlFor="proprietario" className="block text-sm font-medium text-gray-700">Nome do Proprietário</label>
+                <input
+                  id="proprietario"
+                  type="text"
+                  value={formData.proprietario}
+                  onChange={(e) => handleInputChange('proprietario', e.target.value)}
+                  placeholder="Nome completo do proprietário"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                />
+              </div>
+
+              <div className="space-y-2">
+                <label htmlFor="telefone" className="block text-sm font-medium text-gray-700">Telefone</label>
+                <input
+                  id="telefone"
+                  type="text"
+                  value={formData.telefone}
+                  onChange={(e) => handleInputChange('telefone', e.target.value)}
+                  placeholder="(00) 00000-0000"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                />
+              </div>
+
+              <div className="space-y-2">
+                <label htmlFor="email" className="block text-sm font-medium text-gray-700">E-mail</label>
+                <input
+                  id="email"
+                  type="email"
+                  value={formData.email}
+                  onChange={(e) => handleInputChange('email', e.target.value)}
+                  placeholder="email@exemplo.com"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                />
+              </div>
+
+              <div className="space-y-2">
+                <label htmlFor="id_angariador" className="block text-sm font-medium text-gray-700">Angariador</label>
+                <div className="flex space-x-2">
+                  <select
+                    id="id_angariador"
+                    value={formData.id_angariador}
+                    onChange={(e) => handleInputChange('id_angariador', e.target.value)}
+                    disabled={loadingCorretores}
+                    className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  >
+                    <option value="">Selecione um angariador</option>
+                    {corretores.map((corretor) => (
+                      <option key={corretor.id} value={corretor.id}>
+                        {corretor.nome}
+                      </option>
+                    ))}
+                  </select>
+                  <button
+                    type="button"
+                    onClick={limparAngariador}
+                    className="px-3 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 transition-colors"
+                    title="Limpar seleção"
+                  >
+                    <X className="h-4 w-4" />
+                  </button>
+                </div>
+                {loadingCorretores && (
+                  <p className="text-sm text-gray-500">Carregando corretores...</p>
+                )}
+              </div>
             </div>
 
             {/* Seção de Fotos */}
