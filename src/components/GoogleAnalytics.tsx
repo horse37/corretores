@@ -1,6 +1,5 @@
 'use client'
 
-import { useEffect } from 'react'
 import Script from 'next/script'
 
 interface GoogleAnalyticsProps {
@@ -8,30 +7,17 @@ interface GoogleAnalyticsProps {
 }
 
 export default function GoogleAnalytics({ gaId }: GoogleAnalyticsProps) {
-  useEffect(() => {
-    if (typeof window !== 'undefined' && gaId) {
-      // Configurar dataLayer
-      window.dataLayer = window.dataLayer || []
-      const gtag = (...args: any[]) => {
-        window.dataLayer.push(args)
-      }
-      gtag('js', new Date())
-      gtag('config', gaId, {
-        page_title: document.title,
-        page_location: window.location.href,
-      })
-    }
-  }, [gaId])
-
   if (!gaId) {
     return null
   }
 
   return (
     <>
+      {/* Google tag (gtag.js) */}
       <Script
-        strategy="afterInteractive"
+        async
         src={`https://www.googletagmanager.com/gtag/js?id=${gaId}`}
+        strategy="afterInteractive"
       />
       <Script
         id="google-analytics"
@@ -41,10 +27,7 @@ export default function GoogleAnalytics({ gaId }: GoogleAnalyticsProps) {
             window.dataLayer = window.dataLayer || [];
             function gtag(){dataLayer.push(arguments);}
             gtag('js', new Date());
-            gtag('config', '${gaId}', {
-              page_title: document.title,
-              page_location: window.location.href,
-            });
+            gtag('config', '${gaId}');
           `,
         }}
       />

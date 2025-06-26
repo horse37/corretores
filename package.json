@@ -10,7 +10,12 @@
     "version:patch": "npm version patch --no-git-tag-version",
     "version:minor": "npm version minor --no-git-tag-version",
     "version:major": "npm version major --no-git-tag-version",
-    "commit": "npm run version:patch && git add . && git commit"
+    "commit:patch": "npm run version:patch && git add . && git commit -m \"chore: bump version to $(node -p \"require('./package.json').version\")\"",
+    "commit:minor": "npm run version:minor && git add . && git commit -m \"feat: bump version to $(node -p \"require('./package.json').version\")\"",
+    "commit:major": "npm run version:major && git add . && git commit -m \"feat!: bump version to $(node -p \"require('./package.json').version\")\"",
+    "deploy:patch": "npm run commit:patch && git push",
+    "deploy:minor": "npm run commit:minor && git push",
+    "deploy:major": "npm run commit:major && git push"
   },
   "dependencies": {
     "@radix-ui/react-checkbox": "^1.0.4",
