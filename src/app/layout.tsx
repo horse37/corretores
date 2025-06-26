@@ -3,10 +3,12 @@ import { Inter } from 'next/font/google'
 import './globals.css'
 import { Toaster } from '@/components/ui/toaster'
 import GoogleAnalytics from '@/components/GoogleAnalytics'
+import Footer from '@/components/Footer'
 
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
+  metadataBase: new URL(process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:4000'),
   title: {
     default: 'Cooperativa de Corretores - Encontre seu imóvel ideal',
     template: '%s | Cooperativa de Corretores'
@@ -69,8 +71,11 @@ export default function RootLayout({
     <html lang="pt-BR">
       <body className={inter.className}>
         {process.env.GOOGLE_ANALYTICS_ID && <GoogleAnalytics gaId={process.env.GOOGLE_ANALYTICS_ID} />}
-        <div className="min-h-screen bg-gray-50">
-          {children}
+        <div className="min-h-screen bg-gray-50 flex flex-col">
+          <main className="flex-1">
+            {children}
+          </main>
+          <Footer />
         </div>
         <Toaster />
       </body>

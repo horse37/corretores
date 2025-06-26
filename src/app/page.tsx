@@ -5,7 +5,7 @@ import StructuredData, { organizationStructuredData, websiteStructuredData } fro
 
 // Importação dinâmica dos componentes para evitar problemas de renderização no EasyPanel
 const Header = dynamic(() => import('@/components/layout/Header'), { ssr: true })
-const Footer = dynamic(() => import('@/components/layout/Footer'), { ssr: true })
+
 const PropertyList = dynamic(() => import('@/components/properties/PropertyList'), { ssr: true })
 const PropertyFilters = dynamic(() => import('@/components/properties/PropertyFilters'), { ssr: true })
 const Hero = dynamic(() => import('@/components/home/Hero'), { ssr: true })
@@ -47,7 +47,7 @@ export default function HomePage() {
         </section>
       </main>
       
-      <Footer />
+
     </>
   )
 }

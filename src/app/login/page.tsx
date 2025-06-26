@@ -7,7 +7,7 @@ import Image from 'next/image'
 import { Building, Eye, EyeOff, Lock, Mail } from 'lucide-react'
 import toast from 'react-hot-toast'
 import Header from '@/components/layout/Header'
-import Footer from '@/components/layout/Footer'
+
 import { fetchApi } from '@/lib/api'
 
 export default function LoginPage() {
@@ -137,7 +137,7 @@ export default function LoginPage() {
           </div>
         </div>
       </main>
-      <Footer />
+
     </>
   )
 }
