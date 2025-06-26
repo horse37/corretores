@@ -37,15 +37,34 @@ export async function GET(request: NextRequest) {
     
     // Filtro de busca textual
     if (busca) {
-      sql += ` AND (
-        LOWER(i.titulo) LIKE LOWER($${paramIndex}) OR 
-        LOWER(i.descricao) LIKE LOWER($${paramIndex}) OR 
-        LOWER(i.endereco) LIKE LOWER($${paramIndex}) OR 
-        LOWER(i.bairro) LIKE LOWER($${paramIndex}) OR 
-        LOWER(i.cidade) LIKE LOWER($${paramIndex})
-      )`
-      params.push(`%${busca}%`)
-      paramIndex++
+      // Verificar se a busca é um número para comparação de código
+      const isNumeric = /^\d+$/.test(busca.trim())
+      
+      if (isNumeric) {
+        sql += ` AND (
+          LOWER(i.titulo) LIKE LOWER($${paramIndex}) OR 
+          LOWER(i.descricao) LIKE LOWER($${paramIndex}) OR 
+          LOWER(i.endereco) LIKE LOWER($${paramIndex}) OR 
+          LOWER(i.bairro) LIKE LOWER($${paramIndex}) OR 
+          LOWER(i.cidade) LIKE LOWER($${paramIndex}) OR 
+          CAST(i.codigo AS TEXT) LIKE $${paramIndex} OR 
+          i.codigo = $${paramIndex + 1}
+        )`
+        params.push(`%${busca}%`)
+        params.push(parseInt(busca.trim()))
+        paramIndex += 2
+      } else {
+        sql += ` AND (
+          LOWER(i.titulo) LIKE LOWER($${paramIndex}) OR 
+          LOWER(i.descricao) LIKE LOWER($${paramIndex}) OR 
+          LOWER(i.endereco) LIKE LOWER($${paramIndex}) OR 
+          LOWER(i.bairro) LIKE LOWER($${paramIndex}) OR 
+          LOWER(i.cidade) LIKE LOWER($${paramIndex}) OR 
+          CAST(i.codigo AS TEXT) LIKE $${paramIndex}
+        )`
+        params.push(`%${busca}%`)
+        paramIndex++
+      }
     }
     
     // Filtro por tipos
@@ -132,15 +151,34 @@ export async function GET(request: NextRequest) {
     
     // Filtro de busca textual
     if (busca) {
-      countSql += ` AND (
-        LOWER(i.titulo) LIKE LOWER($${countParamIndex}) OR 
-        LOWER(i.descricao) LIKE LOWER($${countParamIndex}) OR 
-        LOWER(i.endereco) LIKE LOWER($${countParamIndex}) OR 
-        LOWER(i.bairro) LIKE LOWER($${countParamIndex}) OR 
-        LOWER(i.cidade) LIKE LOWER($${countParamIndex})
-      )`
-      countParams.push(`%${busca}%`)
-      countParamIndex++
+      // Verificar se a busca é um número para comparação de código
+      const isNumeric = /^\d+$/.test(busca.trim())
+      
+      if (isNumeric) {
+        countSql += ` AND (
+          LOWER(i.titulo) LIKE LOWER($${countParamIndex}) OR 
+          LOWER(i.descricao) LIKE LOWER($${countParamIndex}) OR 
+          LOWER(i.endereco) LIKE LOWER($${countParamIndex}) OR 
+          LOWER(i.bairro) LIKE LOWER($${countParamIndex}) OR 
+          LOWER(i.cidade) LIKE LOWER($${countParamIndex}) OR 
+          CAST(i.codigo AS TEXT) LIKE $${countParamIndex} OR 
+          i.codigo = $${countParamIndex + 1}
+        )`
+        countParams.push(`%${busca}%`)
+        countParams.push(parseInt(busca.trim()))
+        countParamIndex += 2
+      } else {
+        countSql += ` AND (
+          LOWER(i.titulo) LIKE LOWER($${countParamIndex}) OR 
+          LOWER(i.descricao) LIKE LOWER($${countParamIndex}) OR 
+          LOWER(i.endereco) LIKE LOWER($${countParamIndex}) OR 
+          LOWER(i.bairro) LIKE LOWER($${countParamIndex}) OR 
+          LOWER(i.cidade) LIKE LOWER($${countParamIndex}) OR 
+          CAST(i.codigo AS TEXT) LIKE $${countParamIndex}
+        )`
+        countParams.push(`%${busca}%`)
+        countParamIndex++
+      }
     }
     
     // Filtro por tipos

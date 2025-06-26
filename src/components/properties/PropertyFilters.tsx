@@ -179,7 +179,7 @@ const PropertyFilters = () => {
               <label className="label">Busca</label>
               <input
                 type="text"
-                placeholder="Digite palavras-chave..."
+                placeholder="Digite palavras-chave, código do imóvel..."
                 value={filters.busca || ''}
                 onChange={(e) => setFilters({ ...filters, busca: e.target.value })}
                 className="input"

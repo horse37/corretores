@@ -61,9 +61,19 @@ export async function GET(request: NextRequest) {
     }
 
     if (search) {
-      whereConditions.push(`(titulo ILIKE $${paramIndex} OR cidade ILIKE $${paramIndex} OR endereco ILIKE $${paramIndex})`)
-      queryParams.push(`%${search}%`)
-      paramIndex++
+      // Verificar se a busca é um número para comparação de código
+      const isNumeric = /^\d+$/.test(search.trim())
+      
+      if (isNumeric) {
+        whereConditions.push(`(titulo ILIKE $${paramIndex} OR cidade ILIKE $${paramIndex} OR endereco ILIKE $${paramIndex} OR CAST(codigo AS TEXT) LIKE $${paramIndex} OR codigo = $${paramIndex + 1})`)
+        queryParams.push(`%${search}%`)
+        queryParams.push(parseInt(search.trim()))
+        paramIndex += 2
+      } else {
+        whereConditions.push(`(titulo ILIKE $${paramIndex} OR cidade ILIKE $${paramIndex} OR endereco ILIKE $${paramIndex} OR CAST(codigo AS TEXT) LIKE $${paramIndex})`)
+        queryParams.push(`%${search}%`)
+        paramIndex++
+      }
     }
 
     const whereClause = whereConditions.length > 0 ? `WHERE ${whereConditions.join(' AND ')}` : ''
