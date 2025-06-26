@@ -71,7 +71,7 @@ export async function GET(request: NextRequest) {
     // Query para buscar imóveis
     const imoveisQuery = `
       SELECT 
-        id, titulo, tipo, status, preco, cidade, estado, 
+        id, codigo, titulo, tipo, status, preco, cidade, estado, 
         quartos, banheiros, area_total, created_at
       FROM imoveis 
       ${whereClause}

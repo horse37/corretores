@@ -374,16 +374,14 @@ export default function DetalhesContato() {
                   </Button>
                 )}
                 
-                {contato.telefone && (
-                  <Button
-                    variant="outline"
-                    className="w-full justify-start"
-                    onClick={() => window.open(`https://wa.me/55${contato.telefone.replace(/\D/g, '')}`)}
-                  >
-                    <MessageSquare className="h-4 w-4 mr-2" />
-                    WhatsApp
-                  </Button>
-                )}
+                <Button
+                  variant="outline"
+                  className="w-full justify-start"
+                  onClick={() => window.open('https://wa.me/5543301731211')}
+                >
+                  <MessageSquare className="h-4 w-4 mr-2" />
+                  WhatsApp
+                </Button>
               </CardContent>
             </Card>
 

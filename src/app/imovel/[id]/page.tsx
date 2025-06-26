@@ -432,17 +432,15 @@ const ImovelDetalhes = () => {
                   </a>
                 )}
                 
-                {imovel.corretor_whatsapp && (
-                  <a
-                    href={`https://wa.me/${imovel.corretor_whatsapp.replace(/\D/g, '')}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center w-full p-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
-                  >
-                    <MessageCircle className="w-5 h-5 mr-3" />
-                    WhatsApp
-                  </a>
-                )}
+                <a
+                  href="https://wa.me/5543301731211"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center w-full p-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
+                >
+                  <MessageCircle className="w-5 h-5 mr-3" />
+                  WhatsApp
+                </a>
                 
                 {/* Botões de ação principais */}
                 <div className="flex flex-col md:flex-row gap-4 mt-6">

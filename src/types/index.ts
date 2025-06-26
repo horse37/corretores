@@ -14,6 +14,7 @@ export interface Corretor {
 
 export interface Imovel {
   id: number
+  codigo?: number
   titulo: string
   descricao?: string
   tipo: TipoImovel

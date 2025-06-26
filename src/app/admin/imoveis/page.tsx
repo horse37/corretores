@@ -7,9 +7,11 @@ import { Plus, Search, Filter, Edit, Trash2, Eye } from 'lucide-react'
 import AdminLayout from '@/components/admin/AdminLayout'
 import toast from 'react-hot-toast'
 import { fetchAuthApi } from '@/lib/api'
+import { formatImovelId } from '@/lib/utils'
 
 interface Imovel {
   id: number
+  codigo?: number
   titulo: string
   tipo: string
   status: string
@@ -230,25 +232,28 @@ export default function AdminImoveisPage() {
             </div>
           ) : (
             <div className="overflow-x-auto">
-              <table className="min-w-full divide-y divide-gray-200">
+              <table className="w-full table-auto divide-y divide-gray-200">
                 <thead className="bg-gray-50">
                   <tr>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-20">
+                      ID
+                    </th>
+                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                       Imóvel
                     </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-24">
                       Tipo
                     </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-28">
                       Status
                     </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-32">
                       Preço
                     </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-40">
                       Localização
                     </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-24">
                       Ações
                     </th>
                   </tr>
@@ -256,36 +261,43 @@ export default function AdminImoveisPage() {
                 <tbody className="bg-white divide-y divide-gray-200">
                   {imoveis.map((imovel) => (
                     <tr key={imovel.id} className="hover:bg-gray-50">
-                      <td className="px-6 py-4 whitespace-nowrap">
+                      <td className="px-3 py-4 whitespace-nowrap w-20">
+                        <div className="text-sm font-mono font-medium text-gray-900">
+                          {formatImovelId(imovel.codigo)}
+                        </div>
+                      </td>
+                      <td className="px-4 py-4">
                         <div>
-                          <div className="text-sm font-medium text-gray-900">
+                          <div className="text-sm font-medium text-gray-900 truncate max-w-xs">
                             {imovel.titulo}
                           </div>
-                          <div className="text-sm text-gray-500">
-                            {imovel.quartos && `${imovel.quartos} quartos`}
-                            {imovel.banheiros && ` • ${imovel.banheiros} banheiros`}
+                          <div className="text-xs text-gray-500">
+                            {imovel.quartos && `${imovel.quartos}q`}
+                            {imovel.banheiros && ` • ${imovel.banheiros}b`}
                             {imovel.area_total && ` • ${imovel.area_total}m²`}
                           </div>
                         </div>
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap">
+                      <td className="px-3 py-4 whitespace-nowrap w-24">
                         <span className="capitalize text-sm text-gray-900">
                           {imovel.tipo}
                         </span>
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap">
+                      <td className="px-3 py-4 whitespace-nowrap w-28">
                         <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${getStatusBadge(imovel.status)}`}>
                           {imovel.status}
                         </span>
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                      <td className="px-3 py-4 whitespace-nowrap text-sm text-gray-900 w-32">
                         {formatPrice(imovel.preco)}
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                        {imovel.cidade}, {imovel.estado}
+                      <td className="px-3 py-4 whitespace-nowrap text-sm text-gray-900 w-40">
+                        <div className="truncate">
+                          {imovel.cidade}, {imovel.estado}
+                        </div>
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                        <div className="flex space-x-2">
+                      <td className="px-3 py-4 whitespace-nowrap text-sm font-medium w-24">
+                        <div className="flex space-x-1">
                           <button
                             onClick={() => router.push(`/admin/imoveis/${imovel.id}`)}
                             className="text-blue-600 hover:text-blue-900"

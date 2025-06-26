@@ -172,29 +172,27 @@ const ContatoPage = () => {
                   </div>
                 </div>
                 
-                <div className="flex items-start">
+                <a 
+                  href="https://wa.me/5543301731211" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="flex items-start hover:bg-gray-50 p-2 rounded-lg transition-colors cursor-pointer"
+                >
                   <div className="flex-shrink-0 w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
                     <MessageCircle className="w-6 h-6 text-green-600" />
                   </div>
                   <div className="ml-4">
-                    <h3 className="text-lg font-semibold text-gray-900 mb-1">
+                    <h3 className="text-lg font-semibold text-gray-900 mb-1 hover:text-green-600 transition-colors">
                       WhatsApp
                     </h3>
-                    <p className="text-gray-600">
-                      <a 
-                        href="https://wa.me/5511999999999" 
-                        target="_blank" 
-                        rel="noopener noreferrer"
-                        className="hover:text-green-600 transition-colors"
-                      >
-                        
-                      </a>
+                    <p className="text-gray-600 hover:text-green-600 transition-colors">
+                      (43) 3017-3121
                     </p>
                     <p className="text-sm text-gray-500">
                       Atendimento rápido via WhatsApp
                     </p>
                   </div>
-                </div>
+                </a>
               </div>
             </div>
           </motion.div>

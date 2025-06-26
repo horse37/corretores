@@ -5,6 +5,7 @@ import { useRouter, useParams } from 'next/navigation';
 import { ArrowLeft, Save, Loader2, X } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { fetchAuthApi } from '@/lib/api';
+import { formatImovelId } from '@/lib/utils';
 
 interface Corretor {
   id: number;
@@ -12,6 +13,7 @@ interface Corretor {
 }
 
 interface ImovelForm {
+  codigo?: number;
   titulo: string;
   descricao: string;
   tipo: string;
@@ -47,6 +49,7 @@ export default function EditarImovel() {
   const id = params.id as string;
 
   const [formData, setFormData] = useState<ImovelForm>({
+    codigo: undefined,
     titulo: '',
     descricao: '',
     tipo: '',
@@ -129,6 +132,7 @@ export default function EditarImovel() {
       const imovel = data.imovel || data;
       
       setFormData({
+        codigo: imovel.codigo,
         titulo: imovel.titulo || '',
         descricao: imovel.descricao || '',
         tipo: imovel.tipo || '',
@@ -442,6 +446,22 @@ export default function EditarImovel() {
                 {error}
               </div>
             )}
+
+            {/* Campo ID */}
+            <div className="mb-6">
+              <div className="space-y-2">
+                <label htmlFor="codigo" className="block text-sm font-medium text-gray-700">ID do Imóvel</label>
+                <input
+                  id="codigo"
+                  type="text"
+                  value={formatImovelId(formData.codigo)}
+                  readOnly
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-50 text-gray-600 font-mono cursor-not-allowed"
+                  placeholder="ID será gerado automaticamente"
+                />
+                <p className="text-xs text-gray-500">Este campo é gerado automaticamente e não pode ser alterado.</p>
+              </div>
+            </div>
 
             {/* Informações Básicas */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

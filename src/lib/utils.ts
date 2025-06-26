@@ -1,8 +1,14 @@
-import { type ClassValue, clsx } from "clsx";
-import { twMerge } from "tailwind-merge";
+import { type ClassValue, clsx } from "clsx"
+import { twMerge } from "tailwind-merge"
 
 export function cn(...inputs: ClassValue[]) {
-  return twMerge(clsx(inputs));
+  return twMerge(clsx(inputs))
+}
+
+// Função para formatar o código do imóvel com zeros à esquerda
+export function formatImovelId(codigo: number | undefined | null): string {
+  if (!codigo) return '00000'
+  return codigo.toString().padStart(5, '0')
 }
 
 /**

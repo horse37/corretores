@@ -9,6 +9,7 @@ import { motion } from 'framer-motion'
 import { Imovel, PaginatedResponse, FiltrosImovel } from '@/types'
 import LoadingSpinner from '@/components/ui/LoadingSpinner'
 import Pagination from '@/components/ui/Pagination'
+import { formatImovelId } from '@/lib/utils'
 
 const PropertyList = () => {
   const searchParams = useSearchParams()
@@ -220,9 +221,14 @@ const PropertyList = () => {
               
               {/* Conteúdo */}
               <div className="p-4 flex-1 flex flex-col">
-                {/* Preço */}
-                <div className="text-2xl font-bold text-primary-600 mb-2">
-                  {formatPrice(property.preco)}
+                {/* ID e Preço */}
+                <div className="mb-2">
+                  <div className="text-xs font-medium text-gray-500 uppercase tracking-wide mb-1">
+                    ID: {formatImovelId(property.codigo)}
+                  </div>
+                  <div className="text-2xl font-bold text-primary-600">
+                    {formatPrice(property.preco)}
+                  </div>
                 </div>
                 
                 {/* Título */}

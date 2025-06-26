@@ -10,9 +10,11 @@ import { ArrowLeft, MapPin, Bed, Bath, Car, Maximize, Heart, Share2, Phone, Mail
 import Header from '@/components/layout/Header';
 import { motion } from 'framer-motion';
 import toast from 'react-hot-toast';
+import { formatImovelId } from '@/lib/utils';
 
 interface Property {
   id: number;
+  codigo?: number;
   titulo: string;
   descricao: string;
   preco: number;
@@ -276,6 +278,10 @@ export default function PropertyDetailPage() {
                   <Badge variant="outline">
                     {property.tipo}
                   </Badge>
+                </div>
+                
+                <div className="text-sm font-medium text-gray-500 uppercase tracking-wide mb-2">
+                  ID: {formatImovelId(property.codigo)}
                 </div>
                 
                 <h1 className="text-2xl font-bold text-gray-900 mb-2">

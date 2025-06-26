@@ -7,10 +7,12 @@ import AdminLayout from '@/components/admin/AdminLayout'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Alert, AlertDescription } from '@/components/ui/alert'
+import { formatImovelId } from '@/lib/utils'
 import Image from 'next/image'
 
 interface Imovel {
   id: number
+  codigo?: number
   titulo: string
   descricao: string
   tipo: string
@@ -171,6 +173,11 @@ export default function ImovelDetalhes() {
               Voltar
             </Button>
             <div>
+              <div className="flex items-center space-x-3 mb-2">
+                <span className="text-sm font-mono bg-gray-100 px-2 py-1 rounded text-gray-700">
+                  ID: {formatImovelId(imovel.codigo)}
+                </span>
+              </div>
               <h1 className="text-2xl font-bold text-gray-900">{imovel.titulo}</h1>
               <div className="flex items-center space-x-2 mt-1">
                 <span className={`px-2 py-1 text-xs rounded-full ${getStatusColor(imovel.status)}`}>

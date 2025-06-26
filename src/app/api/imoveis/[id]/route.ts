@@ -27,6 +27,7 @@ export async function GET(
     const sql = `
       SELECT 
         id,
+        codigo,
         titulo,
         descricao,
         preco,
