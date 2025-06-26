@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import { useParams } from 'next/navigation'
 import Image from 'next/image'
 import Link from 'next/link'
+import Head from 'next/head'
 import { motion } from 'framer-motion'
 import { 
   ArrowLeft, 
@@ -42,6 +43,47 @@ const ImovelDetalhes = () => {
     tipo: 'interesse' // Valor padrão
   })
   const [submittingContact, setSubmittingContact] = useState(false)
+
+  // Função para gerar dados estruturados JSON-LD
+  const generateStructuredData = (imovel: Imovel) => {
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://cooperativa.com.br'
+    
+    return {
+      "@context": "https://schema.org",
+      "@type": "RealEstateListing",
+      "name": imovel.titulo,
+      "description": imovel.descricao,
+      "url": `${baseUrl}/imovel/${imovel.id}`,
+      "image": imovel.fotos?.map((img: string) => `${baseUrl}${img}`) || [],
+      "offers": {
+        "@type": "Offer",
+        "price": imovel.preco,
+        "priceCurrency": "BRL",
+        "availability": imovel.status === 'disponivel' ? 'https://schema.org/InStock' : 'https://schema.org/OutOfStock'
+      },
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": imovel.endereco,
+        "addressLocality": imovel.cidade,
+        "addressRegion": imovel.estado,
+        "addressCountry": "BR"
+      },
+      "geo": imovel.latitude && imovel.longitude ? {
+        "@type": "GeoCoordinates",
+        "latitude": imovel.latitude,
+        "longitude": imovel.longitude
+      } : undefined,
+      "floorSize": {
+        "@type": "QuantitativeValue",
+        "value": imovel.area_total,
+        "unitCode": "MTK"
+      },
+      "numberOfRooms": imovel.quartos,
+      "numberOfBathroomsTotal": imovel.banheiros,
+      "petsAllowed": false,
+      "datePosted": imovel.created_at
+    }
+  }
 
   useEffect(() => {
     if (params.id) {
@@ -217,6 +259,16 @@ const ImovelDetalhes = () => {
 
   return (
     <div className="min-h-screen bg-gray-50">
+      {imovel && (
+        <Head>
+          <script
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{
+              __html: JSON.stringify(generateStructuredData(imovel))
+            }}
+          />
+        </Head>
+      )}
       {/* Header */}
       <div className="bg-white shadow-sm sticky top-0 z-40">
         <div className="container mx-auto px-4 py-4">

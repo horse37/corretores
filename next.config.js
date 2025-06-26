@@ -17,6 +17,59 @@ const nextConfig = {
     // Configurações experimentais removidas para evitar conflitos
   },
   
+  // Configurações de SEO
+  compress: true,
+  poweredByHeader: false,
+  
+  // Headers para SEO e segurança
+  async headers() {
+    return [
+      {
+        source: '/(.*)',
+        headers: [
+          {
+            key: 'X-Content-Type-Options',
+            value: 'nosniff'
+          },
+          {
+            key: 'X-Frame-Options',
+            value: 'DENY'
+          },
+          {
+            key: 'X-XSS-Protection',
+            value: '1; mode=block'
+          }
+        ]
+      },
+      {
+        source: '/sitemap.xml',
+        headers: [
+          {
+            key: 'Content-Type',
+            value: 'application/xml'
+          },
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=3600, s-maxage=3600'
+          }
+        ]
+      },
+      {
+        source: '/robots.txt',
+        headers: [
+          {
+            key: 'Content-Type',
+            value: 'text/plain'
+          },
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=86400'
+          }
+        ]
+      }
+    ]
+  },
+  
   // Configurações para o proxy do EasyPanel
   // Estas configurações são aplicadas apenas em produção
   // Se NEXT_PUBLIC_BASE_URL estiver definido, usamos como assetPrefix

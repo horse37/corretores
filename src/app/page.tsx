@@ -1,6 +1,7 @@
 import { Suspense } from 'react'
 import dynamic from 'next/dynamic'
 import LoadingSpinner from '@/components/ui/LoadingSpinner'
+import StructuredData, { organizationStructuredData, websiteStructuredData } from '@/components/StructuredData'
 
 // Importação dinâmica dos componentes para evitar problemas de renderização no EasyPanel
 const Header = dynamic(() => import('@/components/layout/Header'), { ssr: true })
@@ -12,6 +13,8 @@ const Hero = dynamic(() => import('@/components/home/Hero'), { ssr: true })
 export default function HomePage() {
   return (
     <>
+      <StructuredData data={organizationStructuredData} />
+      <StructuredData data={websiteStructuredData} />
       <Header />
       <main>
         {/* Hero Section */}
