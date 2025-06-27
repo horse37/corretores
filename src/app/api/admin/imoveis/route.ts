@@ -4,6 +4,7 @@ import { requireAuth } from '@/lib/auth'
 import { writeFile, mkdir } from 'fs/promises'
 import path from 'path'
 import { v4 as uuidv4 } from 'uuid'
+import { scheduleMediaBackup } from '@/lib/media-backup'
 
 // Função para salvar arquivo
 async function saveFile(file: File, folder: string): Promise<string> {
@@ -140,6 +141,8 @@ export async function POST(request: NextRequest) {
       // Processar FormData (com arquivos)
       const formData = await request.formData()
       
+
+      
       data = {
         titulo: formData.get('titulo') as string,
         descricao: formData.get('descricao') as string,
@@ -255,6 +258,22 @@ export async function POST(request: NextRequest) {
         proprietario, telefone, email, id_angariador
       ]
     )
+
+    // Agendar backup das mídias
+    console.log(`🔍 VERIFICANDO BACKUP CADASTRO - Fotos: ${fotosUrls.length}, Vídeos: ${videosUrls.length}`)
+    console.log(`📁 URLs das fotos:`, fotosUrls)
+    console.log(`🎥 URLs dos vídeos:`, videosUrls)
+    
+    if (fotosUrls.length > 0 || videosUrls.length > 0) {
+      console.log(`✅ Condição atendida - Agendando backup do cadastro...`)
+      try {
+        scheduleMediaBackup(result[0].id, fotosUrls, videosUrls)
+      } catch (backupError) {
+        console.error('❌ Erro ao agendar backup de mídias:', backupError)
+      }
+    } else {
+      console.log(`⚠️ Nenhuma mídia para backup no cadastro`)
+    }
 
     return NextResponse.json({
       message: 'Imóvel cadastrado com sucesso',

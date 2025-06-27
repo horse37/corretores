@@ -575,13 +575,14 @@ export default function CadastrarImovelPage() {
               </div>
 
               <div className="space-y-2">
-                <label htmlFor="endereco" className="block text-sm font-medium text-gray-700">Endereço</label>
+                <label htmlFor="endereco" className="block text-sm font-medium text-gray-700">Endereço *</label>
                 <input
                   id="endereco"
                   type="text"
                   value={formData.endereco}
                   onChange={(e) => handleInputChange('endereco', e.target.value)}
                   placeholder="Rua, número, complemento"
+                  required
                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                 />
               </div>
@@ -599,13 +600,14 @@ export default function CadastrarImovelPage() {
               </div>
 
               <div className="space-y-2">
-                <label htmlFor="cidade" className="block text-sm font-medium text-gray-700">Cidade</label>
+                <label htmlFor="cidade" className="block text-sm font-medium text-gray-700">Cidade *</label>
                 <input
                   id="cidade"
                   type="text"
                   value={formData.cidade}
                   onChange={(e) => handleInputChange('cidade', e.target.value)}
                   placeholder="Cidade"
+                  required
                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                 />
               </div>

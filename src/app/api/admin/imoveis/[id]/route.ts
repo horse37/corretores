@@ -4,6 +4,7 @@ import { requireAuth } from '@/lib/auth'
 import { unlink, writeFile, mkdir } from 'fs/promises'
 import path from 'path'
 import { v4 as uuidv4 } from 'uuid'
+import { scheduleMediaBackup } from '@/lib/media-backup'
 
 // Função para salvar arquivo
 async function saveFile(file: File, folder: string): Promise<string> {
@@ -278,6 +279,24 @@ export async function PUT(
         { message: 'Imóvel não encontrado ou você não tem permissão para editá-lo' },
         { status: 404 }
       )
+    }
+
+    // Agendar backup de TODAS as mídias (existentes + novas)
+    console.log(`🔍 VERIFICANDO BACKUP - Total fotos: ${todasFotos.length}, Total vídeos: ${todosVideos.length}`)
+    console.log(`📁 Novas fotos: ${novasFotosUrls.length}, Fotos existentes: ${fotosExistentes.length}`)
+    console.log(`🎥 Novos vídeos: ${novosVideosUrls.length}, Vídeos existentes: ${videosExistentes.length}`)
+    console.log(`📋 Todas as fotos:`, todasFotos)
+    console.log(`📋 Todos os vídeos:`, todosVideos)
+    
+    if (todasFotos.length > 0 || todosVideos.length > 0) {
+      console.log(`✅ Condição atendida - Agendando backup de TODAS as mídias...`)
+      try {
+        scheduleMediaBackup(imovelId, todasFotos, todosVideos)
+      } catch (backupError) {
+        console.error('❌ Erro ao agendar backup de mídias:', backupError)
+      }
+    } else {
+      console.log(`⚠️ Nenhuma mídia para backup`)
     }
 
     return NextResponse.json({
