@@ -341,12 +341,52 @@ const ContatoPage = () => {
             </p>
           </div>
           
-          {/* Placeholder for map - you can integrate with Google Maps or similar */}
-          <div className="h-64 bg-gray-200 flex items-center justify-center">
-            <div className="text-center text-gray-500">
-              <MapPin className="w-12 h-12 mx-auto mb-2" />
-              <p>Mapa interativo será integrado aqui</p>
-              <p className="text-sm">Rua das Flores, 123 - Centro, São Paulo</p>
+          {/* Google Maps Embed */}
+          <div className="h-96 relative">
+            <iframe
+              src="https://maps.google.com/maps?q=Av.+Europa,+559+-+Jardim+Piza,+Londrina+-+PR,+86041-000&t=&z=16&ie=UTF8&iwloc=&output=embed"
+              width="100%"
+              height="100%"
+              style={{ border: 0 }}
+              allowFullScreen
+              loading="lazy"
+              referrerPolicy="no-referrer-when-downgrade"
+              title="Localização da Imobiliária - Av. Europa, 559, Jardim Piza, Londrina/PR"
+            />
+          </div>
+          
+          {/* Address and Actions */}
+          <div className="p-6 bg-gray-50 border-t">
+            <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+              <div className="flex items-start">
+                <MapPin className="w-5 h-5 text-primary-600 mt-1 mr-3 flex-shrink-0" />
+                <div>
+                  <p className="font-semibold text-gray-900">Av. Europa, 559</p>
+                  <p className="text-gray-600">Jardim Piza - Londrina/PR</p>
+                  <p className="text-gray-600">CEP: 86041-000</p>
+                </div>
+              </div>
+              
+              <div className="flex flex-col sm:flex-row gap-3">
+                <a
+                  href="https://www.google.com/maps/dir//Av.+Europa,+559+-+Jardim+Piza,+Londrina+-+PR,+86041-000"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center justify-center px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors font-medium"
+                >
+                  <MapPin className="w-4 h-4 mr-2" />
+                  Como Chegar
+                </a>
+                
+                <a
+                  href="https://www.google.com/maps/place/Av.+Europa,+559+-+Jardim+Piza,+Londrina+-+PR,+86041-000"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center justify-center px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors font-medium"
+                >
+                  Ver no Google Maps
+                </a>
+              </div>
             </div>
           </div>
         </motion.div>
