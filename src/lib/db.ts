@@ -13,11 +13,6 @@ const pool = new Pool({
   min: 2,
   idleTimeoutMillis: 60000,
   connectionTimeoutMillis: 30000,
-  acquireTimeoutMillis: 30000,
-  createTimeoutMillis: 30000,
-  destroyTimeoutMillis: 5000,
-  reapIntervalMillis: 1000,
-  createRetryIntervalMillis: 200,
 })
 
 // Event listeners para o pool
