@@ -9,9 +9,15 @@ const isExternalDB = process.env.DATABASE_URL?.includes('50.114.32.196')
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
   ssl: isExternalDB ? false : (process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false),
-  max: 20,
-  idleTimeoutMillis: 30000,
-  connectionTimeoutMillis: 15000,
+  max: 10,
+  min: 2,
+  idleTimeoutMillis: 60000,
+  connectionTimeoutMillis: 30000,
+  acquireTimeoutMillis: 30000,
+  createTimeoutMillis: 30000,
+  destroyTimeoutMillis: 5000,
+  reapIntervalMillis: 1000,
+  createRetryIntervalMillis: 200,
 })
 
 // Event listeners para o pool
