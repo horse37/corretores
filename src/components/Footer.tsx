@@ -7,12 +7,12 @@ function getVersion(): string {
     if (typeof window === 'undefined') {
       const packagePath = join(process.cwd(), 'package.json')
       const packageJson = JSON.parse(readFileSync(packagePath, 'utf8'))
-      return packageJson.version || '1.0.0'
+      return packageJson.version || '1.0.1'
     }
     // No cliente, retorna uma versão padrão
-    return '1.0.0'
+    return '1.0.1'
   } catch (error) {
-    return '1.0.0'
+    return '1.0.1'
   }
 }
 

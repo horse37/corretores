@@ -145,24 +145,26 @@ export async function POST(request: NextRequest) {
       
       data = {
         titulo: formData.get('titulo') as string,
-        descricao: formData.get('descricao') as string,
+        descricao: formData.get('descricao') as string || '',
         tipo: formData.get('tipo') as string,
         finalidade: formData.get('finalidade') as string,
-        preco: formData.get('preco') ? parseFloat(formData.get('preco') as string) : null,
-        area_total: formData.get('area_total') ? parseFloat(formData.get('area_total') as string) : null,
-        area_construida: formData.get('area_construida') ? parseFloat(formData.get('area_construida') as string) : null,
-        quartos: formData.get('quartos') ? parseInt(formData.get('quartos') as string) : null,
-        banheiros: formData.get('banheiros') ? parseInt(formData.get('banheiros') as string) : null,
-        vagas_garagem: formData.get('vagas_garagem') ? parseInt(formData.get('vagas_garagem') as string) : null,
+        preco: formData.get('preco') ? parseFloat(formData.get('preco') as string) : 0,
+        area_total: formData.get('area_total') ? parseFloat(formData.get('area_total') as string) : 0,
+        area_construida: formData.get('area_construida') ? parseFloat(formData.get('area_construida') as string) : 0,
+        quartos: formData.get('quartos') ? parseInt(formData.get('quartos') as string) : 0,
+        banheiros: formData.get('banheiros') ? parseInt(formData.get('banheiros') as string) : 0,
+        vagas_garagem: formData.get('vagas_garagem') ? parseInt(formData.get('vagas_garagem') as string) : 0,
         endereco: formData.get('endereco') as string,
-        bairro: formData.get('bairro') as string,
+        bairro: formData.get('bairro') as string || '',
         cidade: formData.get('cidade') as string,
-        estado: formData.get('estado') as string,
-        cep: formData.get('cep') as string,
-        proprietario: formData.get('proprietario') as string,
-        telefone: formData.get('telefone') as string,
-        email: formData.get('email') as string,
+        estado: formData.get('estado') as string || '',
+        cep: formData.get('cep') as string || '',
+        proprietario: formData.get('proprietario') as string || '',
+        telefone: formData.get('telefone') as string || '',
+        email: formData.get('email') as string || '',
         id_angariador: formData.get('id_angariador') ? parseInt(formData.get('id_angariador') as string) : null,
+        latitude: formData.get('latitude') ? parseFloat(formData.get('latitude') as string) : 0,
+        longitude: formData.get('longitude') ? parseFloat(formData.get('longitude') as string) : 0,
         caracteristicas: (() => {
           const caracteristicasValue = formData.get('caracteristicas') as string
           if (!caracteristicasValue || caracteristicasValue.trim() === '') {
@@ -216,9 +218,9 @@ export async function POST(request: NextRequest) {
     } = data
 
     // Validações básicas
-    if (!titulo || !tipo || !finalidade || !preco || !endereco || !cidade) {
+    if (!titulo || !tipo || !finalidade || !endereco || !cidade) {
       return NextResponse.json(
-        { message: 'Campos obrigatórios: título, tipo, finalidade, preço, endereço, cidade' },
+        { message: 'Campos obrigatórios: título, tipo, finalidade, endereço, cidade' },
         { status: 400 }
       )
     }
