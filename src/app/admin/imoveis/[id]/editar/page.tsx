@@ -7,6 +7,7 @@ import toast from 'react-hot-toast';
 import { fetchAuthApi } from '@/lib/api';
 import { formatImovelId } from '@/lib/utils';
 
+
 interface Corretor {
   id: number;
   nome: string;
@@ -970,6 +971,7 @@ export default function EditarImovel() {
           </form>
         </div>
       </div>
+
     </div>
   );
 }

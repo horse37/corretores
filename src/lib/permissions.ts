@@ -164,7 +164,20 @@ export function getMenuItems(userRole: string) {
     menuItems.push({
       name: 'Contatos',
       href: '/admin/contatos',
-      icon: 'mail'
+      icon: 'message',
+      submenu: permissions.canManageContatos() ? [
+        { name: 'Listar', href: '/admin/contatos' },
+        { name: 'Novo', href: '/admin/contatos/novo' }
+      ] : undefined
+    })
+  }
+  
+  // Backup de Mídias - apenas para administradores
+  if (permissions.isAdmin()) {
+    menuItems.push({
+      name: 'Backup de Mídias',
+      href: '/admin/backup-medias',
+      icon: 'database'
     })
   }
   

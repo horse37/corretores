@@ -12,9 +12,11 @@ import {
   Menu, 
   X,
   Plus,
-  Settings
+  Settings,
+  Database
 } from 'lucide-react'
 import { fetchAuthApi } from '@/lib/api'
+import { getMenuItems, usePermissions } from '@/lib/permissions'
 
 interface AdminLayoutProps {
   children: React.ReactNode
@@ -25,6 +27,7 @@ interface CorretorInfo {
   nome: string
   email: string
   foto?: string | null
+  role?: string
 }
 
 export default function AdminLayout({ children }: AdminLayoutProps) {
@@ -33,6 +36,7 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
   const [sidebarOpen, setSidebarOpen] = useState(false)
   const [corretor, setCorretor] = useState<CorretorInfo | null>(null)
   const [isLoading, setIsLoading] = useState(true)
+  const [userRole, setUserRole] = useState<string>('')
 
   useEffect(() => {
     const token = localStorage.getItem('token')
@@ -72,8 +76,10 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
               id: payload.id,
               nome: payload.nome,
               email: payload.email,
-              foto: corretorData?.foto || null
+              foto: corretorData?.foto || null,
+              role: payload.role || 'corretor'
             });
+            setUserRole(payload.role || 'corretor');
           } else {
             // Se a resposta não for bem-sucedida, verificar se é um erro de autenticação
             if (response.status === 401) {
@@ -88,8 +94,10 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
               id: payload.id,
               nome: payload.nome,
               email: payload.email,
-              foto: payload.foto || null
+              foto: payload.foto || null,
+              role: payload.role || 'corretor'
             });
+            setUserRole(payload.role || 'corretor');
           }
         } catch (error) {
           console.error('Erro ao buscar informações do corretor:', error);
@@ -98,8 +106,10 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
               id: payload.id,
               nome: payload.nome,
               email: payload.email,
-              foto: payload.foto || null
+              foto: payload.foto || null,
+              role: payload.role || 'corretor'
           });
+          setUserRole(payload.role || 'corretor');
         } finally {
           setIsLoading(false);
         }
@@ -117,32 +127,32 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
     router.push('/login')
   }
 
-  const navigation = [
-    {
-      name: 'Dashboard',
-      href: '/admin',
-      icon: Home,
-      current: pathname === '/admin',
-    },
-    {
-      name: 'Imóveis',
-      href: '/admin/imoveis',
-      icon: Building,
-      current: pathname.startsWith('/admin/imoveis'),
-    },
-    {
-      name: 'Corretores',
-      href: '/admin/corretores',
-      icon: Users,
-      current: pathname.startsWith('/admin/corretores'),
-    },
-    {
-      name: 'Contatos',
-      href: '/admin/contatos',
-      icon: MessageSquare,
-      current: pathname.startsWith('/admin/contatos'),
-    },
-  ]
+  // Obter itens do menu baseado nas permissões
+  const menuItems = userRole ? getMenuItems(userRole) : []
+  
+  // Mapear ícones
+  const getMenuIcon = (iconName: string) => {
+    const iconMap: Record<string, any> = {
+      dashboard: Home,
+      home: Building,
+      users: Users,
+      message: MessageSquare,
+      database: Database
+    }
+    return iconMap[iconName] || Home
+  }
+  
+  // Converter para formato do navigation
+  const navigation = menuItems.map(item => {
+    const Icon = getMenuIcon(item.icon)
+    return {
+      name: item.name,
+      href: item.href,
+      icon: Icon,
+      current: item.href === '/admin' ? pathname === '/admin' : pathname.startsWith(item.href),
+      submenu: item.submenu
+    }
+  })
 
   const quickActions = [
     {
