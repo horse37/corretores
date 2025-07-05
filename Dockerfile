@@ -164,6 +164,10 @@ COPY --from=deps /app/init-permissions.js ./
 # Copiar jsconfig.json para node_modules/@ para garantir resolução de caminhos
 COPY --from=builder --chown=nextjs:nodejs /app/jsconfig.json /app/node_modules/@/
 
+# Aplicar permissões corretas nos diretórios de upload ANTES de trocar usuário
+RUN chmod -R 777 /app/public/uploads && \
+    chown -R nextjs:nodejs /app/public/uploads
+
 # Trocar para o usuário seguro
 USER nextjs
 
