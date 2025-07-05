@@ -56,8 +56,16 @@ export async function GET(request: NextRequest) {
     
     const corretores = await query(corretoresQuery, [...queryParams, limit, offset])
 
+    // Processar o campo foto se for um Buffer para cada corretor
+    const corretoresProcessados = corretores.map(corretor => {
+      if (corretor.foto && typeof corretor.foto === 'object' && corretor.foto.type === 'Buffer') {
+        corretor.foto = Buffer.from(corretor.foto.data).toString('utf8')
+      }
+      return corretor
+    })
+
     return NextResponse.json({
-      corretores,
+      corretores: corretoresProcessados,
       pagination: {
         page,
         limit,

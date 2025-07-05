@@ -130,8 +130,10 @@ RUN adduser --system --uid 1001 nextjs
 COPY --from=builder /app/public ./public
 
 # Criar pastas para uploads e aplicar permissões
-RUN mkdir -p ./public/uploads/imoveis ./public/uploads/corretores
+RUN mkdir -p ./public/uploads/imoveis ./public/uploads/corretores ./public/uploads/imoveis/videos
+RUN chmod -R 755 ./public/uploads
 RUN chown -R nextjs:nodejs ./public/uploads
+RUN chmod -R 777 ./public/uploads
 
 # Copiar build standalone do Next.js
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./

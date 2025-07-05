@@ -8,21 +8,43 @@ import { scheduleMediaBackup } from '@/lib/media-backup'
 
 // Função para salvar arquivo
 async function saveFile(file: File, folder: string): Promise<string> {
-  const bytes = await file.arrayBuffer()
-  const buffer = Buffer.from(bytes)
-  
-  const fileExtension = path.extname(file.name)
-  const fileName = `${uuidv4()}${fileExtension}`
-  const uploadDir = path.join(process.cwd(), 'public', 'uploads', folder)
-  const filePath = path.join(uploadDir, fileName)
-  
-  // Criar diretório se não existir
-  await mkdir(uploadDir, { recursive: true })
-  
-  // Salvar arquivo
-  await writeFile(filePath, buffer)
-  
-  return `/uploads/${folder}/${fileName}`
+  try {
+    console.log(`Iniciando salvamento do arquivo: ${file.name}, Tamanho: ${file.size} bytes`)
+    
+    const bytes = await file.arrayBuffer()
+    const buffer = Buffer.from(bytes)
+    
+    const fileExtension = path.extname(file.name)
+    const fileName = `${uuidv4()}${fileExtension}`
+    const uploadDir = path.join(process.cwd(), 'public', 'uploads', folder)
+    const filePath = path.join(uploadDir, fileName)
+    
+    console.log(`Diretório de upload: ${uploadDir}`)
+    console.log(`Caminho do arquivo: ${filePath}`)
+    
+    // Criar diretório se não existir
+    await mkdir(uploadDir, { recursive: true })
+    
+    // Verificar se o diretório foi criado
+    const fs = require('fs')
+    if (!fs.existsSync(uploadDir)) {
+      throw new Error(`Falha ao criar diretório: ${uploadDir}`)
+    }
+    
+    // Salvar arquivo
+    await writeFile(filePath, buffer)
+    
+    // Verificar se o arquivo foi salvo
+    if (!fs.existsSync(filePath)) {
+      throw new Error(`Falha ao salvar arquivo: ${filePath}`)
+    }
+    
+    console.log(`Arquivo salvo com sucesso: ${fileName}`)
+    return `/uploads/${folder}/${fileName}`
+  } catch (error) {
+    console.error('Erro ao salvar arquivo:', error)
+    throw new Error(`Erro ao salvar arquivo: ${error.message}`)
+  }
 }
 
 export async function GET(request: NextRequest) {

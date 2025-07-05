@@ -33,6 +33,11 @@ export async function GET(
 
     const corretor = corretores[0]
 
+    // Processar o campo foto se for um Buffer
+    if (corretor.foto && typeof corretor.foto === 'object' && corretor.foto.type === 'Buffer') {
+      corretor.foto = Buffer.from(corretor.foto.data).toString('utf8')
+    }
+
     // Buscar estatísticas do corretor
     const stats = await query(`
       SELECT 
