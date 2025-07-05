@@ -124,11 +124,9 @@ export function usePermissions(userRole: string) {
 
 // Função para filtrar itens de menu baseado nas permissões
 export function getMenuItems(userRole: string) {
-  const permissions = usePermissions(userRole)
-  
   const menuItems = []
   
-  if (permissions.canViewDashboard()) {
+  if (hasPermission(userRole, Permission.DASHBOARD_VIEW)) {
     menuItems.push({
       name: 'Dashboard',
       href: '/admin/dashboard',
@@ -136,36 +134,39 @@ export function getMenuItems(userRole: string) {
     })
   }
   
-  if (permissions.hasPermission(Permission.IMOVEIS_VIEW)) {
+  if (hasPermission(userRole, Permission.IMOVEIS_VIEW)) {
+    const canManageImoveis = hasAnyPermission(userRole, [Permission.IMOVEIS_CREATE, Permission.IMOVEIS_EDIT])
     menuItems.push({
       name: 'Imóveis',
       href: '/admin/imoveis',
       icon: 'home',
-      submenu: permissions.canManageImoveis() ? [
+      submenu: canManageImoveis ? [
         { name: 'Listar', href: '/admin/imoveis' },
         { name: 'Novo', href: '/admin/imoveis/novo' }
       ] : undefined
     })
   }
   
-  if (permissions.hasPermission(Permission.CORRETORES_VIEW)) {
+  if (hasPermission(userRole, Permission.CORRETORES_VIEW)) {
+    const canManageCorretores = hasAnyPermission(userRole, [Permission.CORRETORES_CREATE, Permission.CORRETORES_EDIT])
     menuItems.push({
       name: 'Corretores',
       href: '/admin/corretores',
       icon: 'users',
-      submenu: permissions.canManageCorretores() ? [
+      submenu: canManageCorretores ? [
         { name: 'Listar', href: '/admin/corretores' },
         { name: 'Novo', href: '/admin/corretores/novo' }
       ] : undefined
     })
   }
   
-  if (permissions.hasPermission(Permission.CONTATOS_VIEW)) {
+  if (hasPermission(userRole, Permission.CONTATOS_VIEW)) {
+    const canManageContatos = hasAnyPermission(userRole, [Permission.CONTATOS_EDIT, Permission.CONTATOS_DELETE])
     menuItems.push({
       name: 'Contatos',
       href: '/admin/contatos',
       icon: 'message',
-      submenu: permissions.canManageContatos() ? [
+      submenu: canManageContatos ? [
         { name: 'Listar', href: '/admin/contatos' },
         { name: 'Novo', href: '/admin/contatos/novo' }
       ] : undefined
@@ -173,7 +174,7 @@ export function getMenuItems(userRole: string) {
   }
   
   // Backup de Mídias - apenas para administradores
-  if (permissions.isAdmin()) {
+  if (hasPermission(userRole, Permission.ADMIN_FULL)) {
     menuItems.push({
       name: 'Backup de Mídias',
       href: '/admin/backup-medias',

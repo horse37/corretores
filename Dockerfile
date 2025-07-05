@@ -7,8 +7,9 @@ FROM node:18-alpine AS deps
 RUN apk add --no-cache libc6-compat
 WORKDIR /app
 
-# Copiar arquivos de dependências
+# Copiar arquivos de dependências e scripts necessários
 COPY package.json package-lock.json* ./
+COPY init-permissions.js ./
 RUN npm ci --include=dev
 
 # Stage 2: Builder
@@ -158,6 +159,7 @@ COPY --from=builder /app/package.json ./
 COPY --from=builder /app/next.config.js ./
 COPY --from=builder /app/tsconfig.json ./
 COPY --from=builder /app/jsconfig.json ./
+COPY --from=deps /app/init-permissions.js ./
 
 # Copiar jsconfig.json para node_modules/@ para garantir resolução de caminhos
 COPY --from=builder --chown=nextjs:nodejs /app/jsconfig.json /app/node_modules/@/
@@ -168,5 +170,5 @@ USER nextjs
 # Expor porta da aplicação
 EXPOSE 4000
 
-# Comando para iniciar o servidor
-CMD ["node", "server.js"]
+# Comando para iniciar o servidor com correção de permissões
+CMD ["sh", "-c", "node init-permissions.js && node server.js"]

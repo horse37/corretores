@@ -74,7 +74,7 @@ export default function AdminImoveisPage() {
     toast((t) => (
       <div className="p-2">
         <p className="font-medium mb-2">Confirmar exclusão</p>
-        <p className="text-sm mb-4">Tem certeza que deseja excluir o imóvel "{titulo}"?</p>
+        <p className="text-sm mb-4">Tem certeza que deseja excluir o imóvel &apos;{titulo}&apos;?</p>
         <div className="flex space-x-2">
           <button
             className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600 text-sm"

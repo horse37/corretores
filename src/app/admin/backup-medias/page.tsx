@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
@@ -60,11 +60,7 @@ export default function BackupMediasPage() {
     search: ''
   })
 
-  useEffect(() => {
-    fetchBackupMedias()
-  }, [pagination.page, filters])
-
-  const fetchBackupMedias = async () => {
+  const fetchBackupMedias = useCallback(async () => {
     try {
       setLoading(true)
       const token = localStorage.getItem('token')
@@ -97,7 +93,11 @@ export default function BackupMediasPage() {
     } finally {
       setLoading(false)
     }
-  }
+  }, [pagination.page, pagination.limit, filters])
+
+  useEffect(() => {
+    fetchBackupMedias()
+  }, [fetchBackupMedias])
 
   const downloadMedia = async (mediaId: number, nomeArquivo: string) => {
     try {

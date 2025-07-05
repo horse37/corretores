@@ -43,7 +43,7 @@ async function saveFile(file: File, folder: string): Promise<string> {
     return `/uploads/${folder}/${fileName}`
   } catch (error) {
     console.error('Erro ao salvar arquivo:', error)
-    throw new Error(`Erro ao salvar arquivo: ${error.message}`)
+    throw new Error(`Erro ao salvar arquivo: ${error instanceof Error ? error.message : String(error)}`)
   }
 }
 

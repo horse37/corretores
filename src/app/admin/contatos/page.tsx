@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { useRouter } from 'next/navigation'
 import { Search, Filter, Eye, Trash2, Mail, Phone, Calendar, User, Building, MessageSquare } from 'lucide-react'
 import AdminLayout from '@/components/admin/AdminLayout'
@@ -57,7 +57,7 @@ export default function Contatos() {
   })
 
   // Buscar contatos
-  const fetchContatos = async () => {
+  const fetchContatos = useCallback(async () => {
     setLoading(true)
     try {
       const params = new URLSearchParams({
@@ -83,11 +83,11 @@ export default function Contatos() {
     } finally {
       setLoading(false)
     }
-  }
+  }, [currentPage, searchTerm, statusFilter])
 
   useEffect(() => {
     fetchContatos()
-  }, [currentPage, searchTerm, statusFilter])
+  }, [fetchContatos])
 
   const handleStatusChange = async (id: number, newStatus: string) => {
     try {
@@ -112,7 +112,7 @@ export default function Contatos() {
     toast((t) => (
       <div className="p-2">
         <p className="font-medium mb-2">Confirmar exclusão</p>
-        <p className="text-sm mb-4">Tem certeza que deseja excluir o contato "{nome}"?</p>
+        <p className="text-sm mb-4">Tem certeza que deseja excluir o contato &apos;{nome}&apos;?</p>
         <div className="flex space-x-2">
           <button
             className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600 text-sm"
