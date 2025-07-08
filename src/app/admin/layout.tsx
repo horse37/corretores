@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useCallback } from 'react'
 import { useRouter } from 'next/navigation'
 import { toast, Toaster } from 'react-hot-toast'
 import { fetchAuthApi } from '@/lib/api'
@@ -22,11 +22,7 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
   const [loading, setLoading] = useState(true)
   const router = useRouter()
 
-  useEffect(() => {
-    checkAuth()
-  }, [])
-
-  const checkAuth = async () => {
+  const checkAuth = useCallback(async () => {
     try {
       const token = localStorage.getItem('token')
       if (!token) {
@@ -65,7 +61,11 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
     } finally {
       setLoading(false)
     }
-  }
+  }, [router])
+
+  useEffect(() => {
+    checkAuth()
+  }, [checkAuth])
 
   if (loading) {
     return (

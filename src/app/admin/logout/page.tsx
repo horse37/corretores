@@ -1,17 +1,13 @@
 'use client'
 
-import { useEffect } from 'react'
+import { useEffect, useCallback } from 'react'
 import { useRouter } from 'next/navigation'
 import { toast } from 'react-hot-toast'
 
 export default function LogoutPage() {
   const router = useRouter()
 
-  useEffect(() => {
-    handleLogout()
-  }, [])
-
-  const handleLogout = async () => {
+  const handleLogout = useCallback(async () => {
     try {
       // Remover token do localStorage
       localStorage.removeItem('admin_token')
@@ -28,7 +24,11 @@ export default function LogoutPage() {
       toast.error('Erro ao fazer logout')
       router.push('/admin/login')
     }
-  }
+  }, [router])
+
+  useEffect(() => {
+    handleLogout()
+  }, [handleLogout])
 
   return (
     <div className="min-h-screen bg-gray-100 flex items-center justify-center">

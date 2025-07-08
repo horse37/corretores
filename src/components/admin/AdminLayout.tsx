@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import { useRouter, usePathname } from 'next/navigation'
 import Link from 'next/link'
+import Image from 'next/image'
 import { 
   Building, 
   Home, 
@@ -120,7 +121,7 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
       console.error('Erro ao decodificar token:', error)
       router.push('/login')
     }
-  }, [])
+  }, [router])
 
   const handleLogout = () => {
     localStorage.removeItem('token')
@@ -227,9 +228,11 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
               <div className="flex-shrink-0">
                 <div className="h-10 w-10 rounded-full bg-blue-600 flex items-center justify-center shadow-lg overflow-hidden">
                   {corretor?.foto ? (
-                      <img 
+                      <Image 
                         src={corretor.foto?.startsWith('http') || corretor.foto?.startsWith('/uploads') ? corretor.foto : `/uploads/corretores/${corretor.foto}`} 
                         alt={corretor?.nome || 'Usuário'} 
+                        width={40}
+                        height={40}
                         className="h-full w-full object-cover"
                     />
                   ) : (

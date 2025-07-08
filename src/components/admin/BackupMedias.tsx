@@ -1,10 +1,10 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
-import { Download, Image, Video, Calendar, HardDrive, AlertCircle } from 'lucide-react'
+import { Download, Image as ImageIcon, Video, Calendar, HardDrive, AlertCircle } from 'lucide-react'
 import { toast } from 'react-hot-toast'
 
 interface BackupMedia {
@@ -30,11 +30,7 @@ export default function BackupMedias({ imovelId }: BackupMediasProps) {
   const [loading, setLoading] = useState(true)
   const [downloading, setDownloading] = useState<number | null>(null)
 
-  useEffect(() => {
-    fetchBackupMedias()
-  }, [imovelId])
-
-  const fetchBackupMedias = async () => {
+  const fetchBackupMedias = useCallback(async () => {
     try {
       setLoading(true)
       const token = localStorage.getItem('token')
@@ -56,7 +52,11 @@ export default function BackupMedias({ imovelId }: BackupMediasProps) {
     } finally {
       setLoading(false)
     }
-  }
+  }, [imovelId])
+
+  useEffect(() => {
+    fetchBackupMedias()
+  }, [fetchBackupMedias])
 
   const downloadMedia = async (mediaId: number, nomeArquivo: string) => {
     try {
@@ -97,7 +97,7 @@ export default function BackupMedias({ imovelId }: BackupMediasProps) {
   }
 
   const getTipoIcon = (tipo: string) => {
-    return tipo === 'video' ? <Video className="w-4 h-4" /> : <Image className="w-4 h-4" />
+    return tipo === 'video' ? <Video className="w-4 h-4" /> : <ImageIcon className="w-4 h-4" />
   }
 
   const getTipoBadgeColor = (tipo: string) => {

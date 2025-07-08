@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import Image from 'next/image'
@@ -19,7 +19,7 @@ const PropertyList = () => {
   const [favorites, setFavorites] = useState<number[]>([])
 
   // Carregar imóveis
-  const loadProperties = async (page = 1) => {
+  const loadProperties = useCallback(async (page = 1) => {
     try {
       setLoading(true)
       setError(null)
@@ -52,7 +52,7 @@ const PropertyList = () => {
     } finally {
       setLoading(false)
     }
-  }
+  }, [searchParams])
 
   // Carregar favoritos do localStorage
   useEffect(() => {
@@ -65,7 +65,7 @@ const PropertyList = () => {
   // Recarregar quando os parâmetros de busca mudarem
   useEffect(() => {
     loadProperties()
-  }, [searchParams])
+  }, [loadProperties])
 
   // Toggle favorito
   const toggleFavorite = (propertyId: number) => {

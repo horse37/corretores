@@ -109,11 +109,21 @@ const Footer = () => {
                   CEP: 86041-000
                 </span>
               </div>
-              <div className="flex items-center space-x-3">
-                <Phone className="w-5 h-5 text-primary-400 flex-shrink-0" />
-                <div className="text-gray-400 text-sm">
-                  <div>(43) 3017-3121</div>
-                  
+              <div className="flex items-start space-x-3">
+                <Phone className="w-5 h-5 text-primary-400 flex-shrink-0 mt-1" />
+                <div className="text-gray-400 text-sm space-y-1">
+                  <a href="https://wa.me/5543991334100" target="_blank" rel="noopener noreferrer" className="block hover:text-green-400 transition-colors">
+                    (43) 99133-4100
+                  </a>
+                  <a href="https://wa.me/5543991439947" target="_blank" rel="noopener noreferrer" className="block hover:text-green-400 transition-colors">
+                    (43) 99143-9947
+                  </a>
+                  <a href="https://wa.me/5543999833258" target="_blank" rel="noopener noreferrer" className="block hover:text-green-400 transition-colors">
+                    (43) 99983-3258
+                  </a>
+                  <a href="https://wa.me/5543999844526" target="_blank" rel="noopener noreferrer" className="block hover:text-green-400 transition-colors">
+                    (43) 99984-4526
+                  </a>
                 </div>
               </div>
               <div className="flex items-center space-x-3">

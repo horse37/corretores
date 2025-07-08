@@ -5,6 +5,9 @@ import { motion } from 'framer-motion'
 import { MapPin, Phone, Mail, Clock, MessageCircle } from 'lucide-react'
 import toast from 'react-hot-toast'
 import LoadingSpinner from '@/components/ui/LoadingSpinner'
+import dynamic from 'next/dynamic'
+
+const Header = dynamic(() => import('@/components/layout/Header'), { ssr: true })
 
 const ContatoPage = () => {
   const [formData, setFormData] = useState({
@@ -61,7 +64,9 @@ const ContatoPage = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <>
+      <Header />
+      <div className="min-h-screen bg-gray-50">
       {/* Header */}
       <div className="bg-white shadow-sm">
         <div className="container mx-auto px-4 py-12">
@@ -126,11 +131,20 @@ const ContatoPage = () => {
                     <h3 className="text-lg font-semibold text-gray-900 mb-1">
                       Telefone
                     </h3>
-                    <p className="text-gray-600">
-                      <a href="tel:+5511999999999" className="hover:text-primary-600 transition-colors">
-                         <div>(43) 3017-3121</div>
+                    <div className="text-gray-600 space-y-1">
+                      <a href="tel:+554399133-4100" className="hover:text-primary-600 transition-colors block">
+                         <div>(43) 99133-4100</div>
                       </a>
-                    </p>
+                      <a href="tel:+554399143-9947" className="hover:text-primary-600 transition-colors block">
+                         <div>(43) 99143-9947</div>
+                      </a>
+                      <a href="tel:+554399983-3258" className="hover:text-primary-600 transition-colors block">
+                         <div>(43) 99983-3258</div>
+                      </a>
+                      <a href="tel:+554399984-4526" className="hover:text-primary-600 transition-colors block">
+                         <div>(43) 99984-4526</div>
+                      </a>
+                    </div>
                     <p className="text-gray-600">
                       <a href="tel:+551133333333" className="hover:text-primary-600 transition-colors">
                         
@@ -172,27 +186,61 @@ const ContatoPage = () => {
                   </div>
                 </div>
                 
-                <a 
-                  href="https://wa.me/5543301731211" 
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                  className="flex items-start hover:bg-gray-50 p-2 rounded-lg transition-colors cursor-pointer"
-                >
-                  <div className="flex-shrink-0 w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
-                    <MessageCircle className="w-6 h-6 text-green-600" />
+                <div className="space-y-2">
+                  <h3 className="text-lg font-semibold text-gray-900 mb-3 flex items-center">
+                    <MessageCircle className="w-6 h-6 text-green-600 mr-2" />
+                    WhatsApp
+                  </h3>
+                  <div className="space-y-2">
+                    <a 
+                      href="https://wa.me/5543991334100" 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className="flex items-center hover:bg-green-50 p-2 rounded-lg transition-colors cursor-pointer"
+                    >
+                      <div className="flex-shrink-0 w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center mr-3">
+                        <MessageCircle className="w-4 h-4 text-green-600" />
+                      </div>
+                      <span className="text-gray-600 hover:text-green-600 transition-colors">(43) 99133-4100</span>
+                    </a>
+                    <a 
+                      href="https://wa.me/5543991439947" 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className="flex items-center hover:bg-green-50 p-2 rounded-lg transition-colors cursor-pointer"
+                    >
+                      <div className="flex-shrink-0 w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center mr-3">
+                        <MessageCircle className="w-4 h-4 text-green-600" />
+                      </div>
+                      <span className="text-gray-600 hover:text-green-600 transition-colors">(43) 99143-9947</span>
+                    </a>
+                    <a 
+                      href="https://wa.me/5543999833258" 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className="flex items-center hover:bg-green-50 p-2 rounded-lg transition-colors cursor-pointer"
+                    >
+                      <div className="flex-shrink-0 w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center mr-3">
+                        <MessageCircle className="w-4 h-4 text-green-600" />
+                      </div>
+                      <span className="text-gray-600 hover:text-green-600 transition-colors">(43) 99983-3258</span>
+                    </a>
+                    <a 
+                      href="https://wa.me/5543999844526" 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className="flex items-center hover:bg-green-50 p-2 rounded-lg transition-colors cursor-pointer"
+                    >
+                      <div className="flex-shrink-0 w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center mr-3">
+                        <MessageCircle className="w-4 h-4 text-green-600" />
+                      </div>
+                      <span className="text-gray-600 hover:text-green-600 transition-colors">(43) 99984-4526</span>
+                    </a>
                   </div>
-                  <div className="ml-4">
-                    <h3 className="text-lg font-semibold text-gray-900 mb-1 hover:text-green-600 transition-colors">
-                      WhatsApp
-                    </h3>
-                    <p className="text-gray-600 hover:text-green-600 transition-colors">
-                      (43) 3017-3121
-                    </p>
-                    <p className="text-sm text-gray-500">
-                      Atendimento rápido via WhatsApp
-                    </p>
-                  </div>
-                </a>
+                  <p className="text-sm text-gray-500 mt-2">
+                    Atendimento rápido via WhatsApp
+                  </p>
+                </div>
               </div>
             </div>
           </motion.div>
@@ -392,6 +440,7 @@ const ContatoPage = () => {
         </motion.div>
       </div>
     </div>
+    </>
   )
 }
 

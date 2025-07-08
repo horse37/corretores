@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { useRouter } from 'next/navigation'
 import { Plus, Search, Edit, Trash2, Eye, UserCheck, UserX } from 'lucide-react'
 import AdminLayout from '@/components/admin/AdminLayout'
@@ -49,7 +49,7 @@ export default function Corretores() {
     }
   }, [])
 
-  const fetchCorretores = async () => {
+  const fetchCorretores = useCallback(async () => {
     try {
       setLoading(true)
       const params = new URLSearchParams()
@@ -99,7 +99,7 @@ export default function Corretores() {
     } finally {
       setLoading(false)
     }
-  }
+  }, [searchTerm, statusFilter, currentUserRole, currentUserId])
 
   const handleToggleStatus = async (id: number, currentStatus: boolean) => {
     try {
@@ -178,7 +178,7 @@ export default function Corretores() {
     if (currentUserRole !== null) {
       fetchCorretores()
     }
-  }, [searchTerm, statusFilter, currentUserRole, currentUserId])
+  }, [searchTerm, statusFilter, currentUserRole, currentUserId, fetchCorretores])
 
   const filteredCorretores = corretores.filter(corretor => {
     const matchesSearch = corretor.nome.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -275,9 +275,11 @@ export default function Corretores() {
                         {/* Foto do Corretor */}
                         <div className="relative w-16 h-16 bg-gray-100 rounded-full overflow-hidden">
                           {corretor.foto ? (
-                            <img
+                            <Image
                               src={corretor.foto.startsWith('http') || corretor.foto.startsWith('/uploads') ? corretor.foto : `/uploads/corretores/${corretor.foto}`}
                               alt={corretor.nome}
+                              width={64}
+                              height={64}
                               className="w-full h-full object-cover"
                               onError={(e) => {
                                 console.log('Erro ao carregar foto:', corretor.foto)

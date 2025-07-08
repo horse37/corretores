@@ -1,7 +1,8 @@
 'use client'
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useRouter, useParams } from 'next/navigation';
+import Image from 'next/image';
 import { ArrowLeft, Save, Loader2, X } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { fetchAuthApi } from '@/lib/api';
@@ -87,14 +88,7 @@ export default function EditarImovel() {
   const [corretores, setCorretores] = useState<Corretor[]>([]);
   const [loadingCorretores, setLoadingCorretores] = useState(false);
 
-  useEffect(() => {
-    if (id) {
-      fetchImovel();
-    }
-    carregarCorretores();
-  }, [id]);
-
-  const carregarCorretores = async () => {
+  const carregarCorretores = useCallback(async () => {
     try {
       setLoadingCorretores(true);
       const response = await fetchAuthApi('admin/corretores');
@@ -111,7 +105,7 @@ export default function EditarImovel() {
     } finally {
       setLoadingCorretores(false);
     }
-  };
+  }, []);
 
   const limparAngariador = () => {
     setFormData(prev => ({
@@ -120,7 +114,7 @@ export default function EditarImovel() {
     }));
   };
 
-  const fetchImovel = async () => {
+  const fetchImovel = useCallback(async () => {
     try {
       setLoadingData(true);
       const response = await fetchAuthApi(`admin/imoveis/${id}`);
@@ -168,7 +162,14 @@ export default function EditarImovel() {
     } finally {
       setLoadingData(false);
     }
-  };
+  }, [id]);
+
+  useEffect(() => {
+    if (id) {
+      fetchImovel();
+    }
+    carregarCorretores();
+  }, [id, fetchImovel, carregarCorretores]);
 
   const formatCurrency = (value: string) => {
     // Remove tudo que não é dígito
@@ -822,9 +823,11 @@ export default function EditarImovel() {
                   <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                     {formData.fotosExistentes.map((foto, index) => (
                       <div key={index} className="relative group">
-                        <img
+                        <Image
                           src={foto}
                           alt={`Foto ${index + 1}`}
+                          width={96}
+                          height={96}
                           className="w-full h-24 object-cover rounded-md border"
                         />
                         <button

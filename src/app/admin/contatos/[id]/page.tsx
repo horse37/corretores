@@ -374,14 +374,45 @@ export default function DetalhesContato() {
                   </Button>
                 )}
                 
-                <Button
-                  variant="outline"
-                  className="w-full justify-start"
-                  onClick={() => window.open('https://wa.me/5543301731211')}
-                >
-                  <MessageSquare className="h-4 w-4 mr-2" />
-                  WhatsApp
-                </Button>
+                <div className="relative group">
+                  <Button
+                    variant="outline"
+                    className="w-full justify-start"
+                  >
+                    <MessageSquare className="h-4 w-4 mr-2" />
+                    WhatsApp
+                  </Button>
+                  <div className="absolute top-full left-0 right-0 mt-1 bg-white border border-gray-200 rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-10">
+                    <button
+                      onClick={() => window.open('https://wa.me/5543991334100')}
+                      className="flex items-center w-full p-3 text-gray-700 hover:bg-green-50 hover:text-green-600 transition-colors border-b border-gray-100 text-left"
+                    >
+                      <MessageSquare className="h-4 w-4 mr-2 text-green-600" />
+                      (43) 99133-4100
+                    </button>
+                    <button
+                      onClick={() => window.open('https://wa.me/5543991439947')}
+                      className="flex items-center w-full p-3 text-gray-700 hover:bg-green-50 hover:text-green-600 transition-colors border-b border-gray-100 text-left"
+                    >
+                      <MessageSquare className="h-4 w-4 mr-2 text-green-600" />
+                      (43) 99143-9947
+                    </button>
+                    <button
+                      onClick={() => window.open('https://wa.me/5543999833258')}
+                      className="flex items-center w-full p-3 text-gray-700 hover:bg-green-50 hover:text-green-600 transition-colors border-b border-gray-100 text-left"
+                    >
+                      <MessageSquare className="h-4 w-4 mr-2 text-green-600" />
+                      (43) 99983-3258
+                    </button>
+                    <button
+                      onClick={() => window.open('https://wa.me/5543999844526')}
+                      className="flex items-center w-full p-3 text-gray-700 hover:bg-green-50 hover:text-green-600 transition-colors text-left"
+                    >
+                      <MessageSquare className="h-4 w-4 mr-2 text-green-600" />
+                      (43) 99984-4526
+                    </button>
+                  </div>
+                </div>
               </CardContent>
             </Card>
 

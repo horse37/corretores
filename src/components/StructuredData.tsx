@@ -33,19 +33,39 @@ export const organizationStructuredData = {
     "url": `${process.env.NEXT_PUBLIC_BASE_URL || "https://cooperativa.com.br"}/logo.jpg`
   },
   "image": `${process.env.NEXT_PUBLIC_BASE_URL || "https://cooperativa.com.br"}/logo.jpg`,
-  "telephone": "+55 43 3017-3121",
+  "telephone": ["+55 43 99133-4100", "+55 43 99143-9947", "+55 43 99983-3258", "+55 43 99984-4526"],
   "address": {
     "@type": "PostalAddress",
     "addressCountry": "BR",
     "addressLocality": "Sua Cidade",
     "addressRegion": "Paraná"
   },
-  "contactPoint": {
-    "@type": "ContactPoint",
-    "telephone": "+55 43 3017-3121",
-    "contactType": "customer service",
-    "availableLanguage": "Portuguese"
-  },
+  "contactPoint": [
+    {
+      "@type": "ContactPoint",
+      "telephone": "+55 43 99133-4100",
+      "contactType": "customer service",
+      "availableLanguage": "Portuguese"
+    },
+    {
+      "@type": "ContactPoint",
+      "telephone": "+55 43 99143-9947",
+      "contactType": "customer service",
+      "availableLanguage": "Portuguese"
+    },
+    {
+      "@type": "ContactPoint",
+      "telephone": "+55 43 99983-3258",
+      "contactType": "customer service",
+      "availableLanguage": "Portuguese"
+    },
+    {
+      "@type": "ContactPoint",
+      "telephone": "+55 43 99984-4526",
+      "contactType": "customer service",
+      "availableLanguage": "Portuguese"
+    }
+  ],
   "sameAs": [
     // Adicione aqui links para redes sociais quando disponíveis
   ],

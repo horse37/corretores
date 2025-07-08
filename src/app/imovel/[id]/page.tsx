@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { useParams } from 'next/navigation'
 import Image from 'next/image'
 import Link from 'next/link'
@@ -85,14 +85,7 @@ const ImovelDetalhes = () => {
     }
   }
 
-  useEffect(() => {
-    if (params.id) {
-      fetchImovel()
-      checkFavorite()
-    }
-  }, [params.id])
-
-  const fetchImovel = async () => {
+  const fetchImovel = useCallback(async () => {
     try {
       setLoading(true)
       const response = await fetch(`/api/imoveis/${params.id}`)
@@ -108,12 +101,19 @@ const ImovelDetalhes = () => {
     } finally {
       setLoading(false)
     }
-  }
+  }, [params.id])
 
-  const checkFavorite = () => {
+  const checkFavorite = useCallback(() => {
     const favorites = JSON.parse(localStorage.getItem('favorites') || '[]')
     setIsFavorite(favorites.includes(Number(params.id)))
-  }
+  }, [params.id])
+
+  useEffect(() => {
+    if (params.id) {
+      fetchImovel()
+      checkFavorite()
+    }
+  }, [params.id, fetchImovel, checkFavorite])
 
   const toggleFavorite = () => {
     const favorites = JSON.parse(localStorage.getItem('favorites') || '[]')
@@ -484,15 +484,50 @@ const ImovelDetalhes = () => {
                   </a>
                 )}
                 
-                <a
-                  href="https://wa.me/5543301731211"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center w-full p-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
-                >
-                  <MessageCircle className="w-5 h-5 mr-3" />
-                  WhatsApp
-                </a>
+                <div className="relative group">
+                  <button className="flex items-center w-full p-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors">
+                    <MessageCircle className="w-5 h-5 mr-3" />
+                    WhatsApp
+                  </button>
+                  <div className="absolute top-full left-0 right-0 mt-1 bg-white border border-gray-200 rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-10">
+                    <a
+                      href="https://wa.me/5543991334100"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center w-full p-3 text-gray-700 hover:bg-green-50 hover:text-green-600 transition-colors border-b border-gray-100"
+                    >
+                      <MessageCircle className="w-4 h-4 mr-3 text-green-600" />
+                      (43) 99133-4100
+                    </a>
+                    <a
+                      href="https://wa.me/5543991439947"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center w-full p-3 text-gray-700 hover:bg-green-50 hover:text-green-600 transition-colors border-b border-gray-100"
+                    >
+                      <MessageCircle className="w-4 h-4 mr-3 text-green-600" />
+                      (43) 99143-9947
+                    </a>
+                    <a
+                      href="https://wa.me/5543999833258"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center w-full p-3 text-gray-700 hover:bg-green-50 hover:text-green-600 transition-colors border-b border-gray-100"
+                    >
+                      <MessageCircle className="w-4 h-4 mr-3 text-green-600" />
+                      (43) 99983-3258
+                    </a>
+                    <a
+                      href="https://wa.me/5543999844526"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center w-full p-3 text-gray-700 hover:bg-green-50 hover:text-green-600 transition-colors"
+                    >
+                      <MessageCircle className="w-4 h-4 mr-3 text-green-600" />
+                      (43) 99984-4526
+                    </a>
+                  </div>
+                </div>
                 
                 {/* Botões de ação principais */}
                 <div className="flex flex-col md:flex-row gap-4 mt-6">

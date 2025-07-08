@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useCallback } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import { Plus, Search, Filter, Edit, Trash2, Eye } from 'lucide-react'
@@ -33,11 +33,7 @@ export default function AdminImoveisPage() {
   const [statusFilter, setStatusFilter] = useState(searchParams.get('status') || '')
   const [tipoFilter, setTipoFilter] = useState('')
 
-  useEffect(() => {
-    fetchImoveis()
-  }, [statusFilter, tipoFilter])
-
-  const fetchImoveis = async () => {
+  const fetchImoveis = useCallback(async () => {
     try {
       const token = localStorage.getItem('token')
       if (!token) {
@@ -63,7 +59,11 @@ export default function AdminImoveisPage() {
     } finally {
       setLoading(false)
     }
-  }
+  }, [statusFilter, tipoFilter, router, searchTerm])
+
+  useEffect(() => {
+    fetchImoveis()
+  }, [statusFilter, tipoFilter, fetchImoveis])
 
   const handleSearch = () => {
     fetchImoveis()

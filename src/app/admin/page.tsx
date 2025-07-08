@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useCallback } from 'react'
 import { useRouter } from 'next/navigation'
 import { Building, Users, MessageSquare, TrendingUp, Plus, Eye, Edit } from 'lucide-react'
 import AdminLayout from '@/components/admin/AdminLayout'
@@ -25,17 +25,7 @@ export default function AdminDashboard() {
   })
   const [loading, setLoading] = useState(true)
 
-  useEffect(() => {
-    const token = localStorage.getItem('token')
-    if (!token) {
-      router.push('/login')
-      return
-    }
-
-    fetchStats()
-  }, [])
-
-  const fetchStats = async () => {
+  const fetchStats = useCallback(async () => {
     try {
       const response = await fetchAuthApi('admin/stats')
 
@@ -56,7 +46,17 @@ export default function AdminDashboard() {
     } finally {
       setLoading(false)
     }
-  }
+  }, [router])
+
+  useEffect(() => {
+    const token = localStorage.getItem('token')
+    if (!token) {
+      router.push('/login')
+      return
+    }
+
+    fetchStats()
+  }, [fetchStats, router])
 
   const statCards = [
     {

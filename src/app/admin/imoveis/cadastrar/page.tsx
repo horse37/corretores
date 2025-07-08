@@ -1,8 +1,9 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import Image from 'next/image';
 import { ArrowLeft, Loader2, Upload, Video, X } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { fetchAuthApi, getApiBaseUrl } from '@/lib/api';
@@ -185,48 +186,42 @@ export default function CadastrarImovelPage() {
     }
   };
 
-  const carregarCorretores = async () => {
-    try {
-      setLoadingCorretores(true);
-      const token = localStorage.getItem('token');
-      if (!token) {
-        router.push('/login');
-        return;
-      }
 
-      const { getApiBaseUrl } = await import('@/lib/api');
-      const apiBaseUrl = getApiBaseUrl();
-      
-      const response = await fetch(`${apiBaseUrl}/admin/corretores`, {
-        headers: {
-          'Authorization': `Bearer ${token}`
-        }
-      });
-
-      if (!response.ok) {
-        throw new Error('Erro ao carregar corretores');
-      }
-
-      const data = await response.json();
-      setCorretores(data.corretores || []);
-    } catch (error) {
-      console.error('Erro ao carregar corretores:', error);
-      toast.error('Erro ao carregar lista de corretores');
-    } finally {
-      setLoadingCorretores(false);
-    }
-  };
 
   const limparAngariador = () => {
     setFormData(prev => ({
       ...prev,
       id_angariador: ''
     }));
-  };
+};
 
-  useEffect(() => {
-    carregarCorretores();
-  }, []);
+const carregarCorretores = useCallback(async () => {
+  try {
+    setLoadingCorretores(true);
+    const token = localStorage.getItem('token');
+    if (!token) {
+      router.push('/login');
+      return;
+    }
+
+    const response = await fetchAuthApi('admin/corretores');
+    if (!response.ok) {
+      throw new Error('Erro ao carregar corretores');
+    }
+
+    const data = await response.json();
+    setCorretores(data.corretores || []);
+  } catch (error) {
+    console.error('Erro ao carregar corretores:', error);
+    toast.error('Erro ao carregar corretores');
+  } finally {
+    setLoadingCorretores(false);
+  }
+}, [router]);
+
+useEffect(() => {
+  carregarCorretores();
+}, [carregarCorretores]);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || []);
@@ -747,9 +742,11 @@ export default function CadastrarImovelPage() {
                   {formData.fotos.map((foto, index) => (
                     <div key={index} className="relative group">
                       <div className="aspect-square overflow-hidden rounded-lg bg-gray-100">
-                        <img 
+                        <Image 
                           src={foto instanceof File ? URL.createObjectURL(foto) : foto} 
                           alt={`Foto ${index + 1}`} 
+                          width={200}
+                          height={200}
                           className="w-full h-full object-cover"
                         />
                       </div>

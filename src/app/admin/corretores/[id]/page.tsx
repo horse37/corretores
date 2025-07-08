@@ -257,9 +257,11 @@ export default function DetalhesCorretor() {
                 <div className="flex items-center space-x-4">
                   <div className="relative w-20 h-20 bg-gray-100 rounded-full overflow-hidden flex-shrink-0">
                     {corretor.foto ? (
-                      <img
+                      <Image
                         src={corretor.foto.startsWith('http') || corretor.foto.startsWith('/uploads') ? corretor.foto : `/uploads/corretores/${corretor.foto}`}
                         alt={corretor.nome}
+                        width={80}
+                        height={80}
                         className="w-full h-full object-cover"
                         onError={(e) => {
                           console.log('Erro ao carregar:', corretor.foto)

@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { useRouter, useParams } from 'next/navigation'
 import { ArrowLeft, Edit, Trash2, MapPin, Home, Bed, Bath, Car, Ruler } from 'lucide-react'
 import AdminLayout from '@/components/admin/AdminLayout'
@@ -45,7 +45,7 @@ export default function ImovelDetalhes() {
   const [error, setError] = useState('')
   const [selectedImage, setSelectedImage] = useState(0)
 
-  const fetchImovel = async () => {
+  const fetchImovel = useCallback(async () => {
     try {
       setLoading(true)
       const response = await fetch(`/api/admin/imoveis/${params.id}`, {
@@ -65,7 +65,7 @@ export default function ImovelDetalhes() {
     } finally {
       setLoading(false)
     }
-  }
+  }, [params.id])
 
   const handleDelete = async () => {
     if (!confirm('Tem certeza que deseja excluir este imóvel?')) {
@@ -122,7 +122,7 @@ export default function ImovelDetalhes() {
 
   useEffect(() => {
     fetchImovel()
-  }, [params.id])
+  }, [fetchImovel])
 
   if (loading) {
     return (

@@ -146,7 +146,7 @@ export default function BackupMediasPage() {
   }
 
   const getTipoIcon = (tipo: string) => {
-    return tipo === 'video' ? <Video className="w-4 h-4" /> : <Image className="w-4 h-4" />
+    return tipo === 'video' ? <Video className="w-4 h-4" aria-label="Vídeo" /> : <Image className="w-4 h-4" aria-label="Imagem" />
   }
 
   const getTipoBadgeColor = (tipo: string) => {
@@ -200,8 +200,8 @@ export default function BackupMediasPage() {
                   <p className="text-2xl font-bold">{estatisticas.total_imagens} / {estatisticas.total_videos}</p>
                 </div>
                 <div className="flex gap-1">
-                  <Image className="w-4 h-4 text-blue-500" />
-                  <Video className="w-4 h-4 text-purple-500" />
+                  <Image className="w-4 h-4 text-blue-500" aria-label="Ícone de imagem" />
+                  <Video className="w-4 h-4 text-purple-500" aria-label="Ícone de vídeo" />
                 </div>
               </div>
             </CardContent>
