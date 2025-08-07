@@ -91,8 +91,9 @@ ENV NEXT_TELEMETRY_DISABLED=1
 ENV DATABASE_URL=postgresql://postgres:postgres@localhost:5432/imobiliaria_temp
 
 # Build com ambiente de produção (padrão do Next.js)
-# Adicionando --no-lint para evitar problemas durante o build
-RUN npm run build -- --no-lint
+# Desabilitando ESLint durante o build para evitar problemas
+ENV NEXT_LINT=false
+RUN npm run build
 
 # Garantir que os componentes estejam disponíveis nos diretórios .next/server e .next/standalone
 RUN mkdir -p ./.next/server/app/components ./.next/server/src/components ./.next/standalone/src/components ./.next/standalone/src/lib ./.next/standalone/src/app ./.next/server/src/types ./.next/standalone/src/types
@@ -122,6 +123,7 @@ ENV NODE_ENV=production
 ENV NEXT_TELEMETRY_DISABLED=1
 ENV PORT=4000
 ENV HOSTNAME="0.0.0.0"
+# Removido NEXTAUTH_URL e NODE_OPTIONS que estavam causando lentidão no deploy
 
 # Criar usuário não-root para produção
 RUN addgroup --system --gid 1001 nodejs
@@ -160,6 +162,9 @@ COPY --from=builder /app/next.config.js ./
 COPY --from=builder /app/tsconfig.json ./
 COPY --from=builder /app/jsconfig.json ./
 COPY --from=deps /app/init-permissions.js ./
+RUN mkdir -p ./scripts
+COPY --from=builder /app/scripts/sync-script-standalone.js ./scripts/
+COPY --from=deps /app/node_modules ./node_modules
 
 # Copiar jsconfig.json para node_modules/@ para garantir resolução de caminhos
 COPY --from=builder --chown=nextjs:nodejs /app/jsconfig.json /app/node_modules/@/

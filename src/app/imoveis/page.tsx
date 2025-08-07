@@ -7,6 +7,9 @@ import LoadingSpinner from '@/components/ui/LoadingSpinner'
 import Header from '@/components/layout/Header'
 
 const ImoveisPage = () => {
+
+
+
   return (
     <div className="min-h-screen bg-gray-50">
       <Header />
@@ -20,6 +23,8 @@ const ImoveisPage = () => {
             <p className="text-xl text-gray-600 max-w-2xl mx-auto">
               Explore nossa seleção completa de imóveis para venda e locação
             </p>
+            
+
           </div>
         </div>
       </div>
